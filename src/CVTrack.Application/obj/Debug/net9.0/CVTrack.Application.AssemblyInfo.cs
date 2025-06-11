@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("CVTrack.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ba2dbd97d5b5bbef0e60ea467919237e67744d6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+53dfbf29f7d87f53a2725055fc0009de90622a81")]
 [assembly: System.Reflection.AssemblyProductAttribute("CVTrack.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CVTrack.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

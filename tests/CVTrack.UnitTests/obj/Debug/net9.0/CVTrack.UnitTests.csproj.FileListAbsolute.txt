@@ -90,6 +90,7 @@
 /Users/burak/Projeler/CVTrack/tests/CVTrack.UnitTests/obj/Debug/net9.0/CVTrack.UnitTests.AssemblyInfoInputs.cache
 /Users/burak/Projeler/CVTrack/tests/CVTrack.UnitTests/obj/Debug/net9.0/CVTrack.UnitTests.AssemblyInfo.cs
 /Users/burak/Projeler/CVTrack/tests/CVTrack.UnitTests/obj/Debug/net9.0/CVTrack.UnitTests.csproj.CoreCompileInputs.cache
+/Users/burak/Projeler/CVTrack/tests/CVTrack.UnitTests/obj/Debug/net9.0/CVTrack.UnitTests.sourcelink.json
 /Users/burak/Projeler/CVTrack/tests/CVTrack.UnitTests/obj/Debug/net9.0/CVTrack..7003DD16.Up2Date
 /Users/burak/Projeler/CVTrack/tests/CVTrack.UnitTests/obj/Debug/net9.0/CVTrack.UnitTests.dll
 /Users/burak/Projeler/CVTrack/tests/CVTrack.UnitTests/obj/Debug/net9.0/refint/CVTrack.UnitTests.dll

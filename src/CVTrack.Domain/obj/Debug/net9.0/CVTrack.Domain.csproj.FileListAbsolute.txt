@@ -5,8 +5,8 @@
 /Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/CVTrack.Domain.AssemblyInfoInputs.cache
 /Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/CVTrack.Domain.AssemblyInfo.cs
 /Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/CVTrack.Domain.csproj.CoreCompileInputs.cache
+/Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/CVTrack.Domain.sourcelink.json
 /Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/CVTrack.Domain.dll
 /Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/refint/CVTrack.Domain.dll
 /Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/CVTrack.Domain.pdb
 /Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/ref/CVTrack.Domain.dll
-/Users/burak/Projeler/CVTrack/src/CVTrack.Domain/obj/Debug/net9.0/CVTrack.Domain.sourcelink.json

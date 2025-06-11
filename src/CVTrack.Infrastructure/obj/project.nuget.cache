@@ -1,8 +1,19 @@
 {
   "version": 2,
-  "dgSpecHash": "dQkHaQBno5s=",
+  "dgSpecHash": "e16xanU21EI=",
   "success": true,
   "projectFilePath": "/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/CVTrack.Infrastructure.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/burak/.nuget/packages/fluentvalidation/12.0.0/fluentvalidation.12.0.0.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.extensions.configuration.abstractions/9.0.6/microsoft.extensions.configuration.abstractions.9.0.6.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.extensions.logging.abstractions/8.0.0/microsoft.extensions.logging.abstractions.8.0.0.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.extensions.primitives/9.0.6/microsoft.extensions.primitives.9.0.6.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.identitymodel.abstractions/8.12.0/microsoft.identitymodel.abstractions.8.12.0.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.identitymodel.jsonwebtokens/8.12.0/microsoft.identitymodel.jsonwebtokens.8.12.0.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.identitymodel.logging/8.12.0/microsoft.identitymodel.logging.8.12.0.nupkg.sha512",
+    "/Users/burak/.nuget/packages/microsoft.identitymodel.tokens/8.12.0/microsoft.identitymodel.tokens.8.12.0.nupkg.sha512",
+    "/Users/burak/.nuget/packages/system.identitymodel.tokens.jwt/8.12.0/system.identitymodel.tokens.jwt.8.12.0.nupkg.sha512"
+  ],
   "logs": []
 }

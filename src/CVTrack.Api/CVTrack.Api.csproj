@@ -7,8 +7,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="9.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.6" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.4" />
+
+    <ProjectReference Include="..\CVTrack.Domain\CVTrack.Domain.csproj" />
+    <ProjectReference Include="..\CVTrack.Application\CVTrack.Application.csproj" />
+    <ProjectReference Include="..\CVTrack.Infrastructure\CVTrack.Infrastructure.csproj" />
+    <ProjectReference Include="..\CVTrack.Persistence\CVTrack.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
