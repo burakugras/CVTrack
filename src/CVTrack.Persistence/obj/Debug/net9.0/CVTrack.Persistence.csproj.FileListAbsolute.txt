@@ -1,0 +1,11 @@
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Persistence.deps.json
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Persistence.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Persistence.pdb
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.GeneratedMSBuildEditorConfig.editorconfig
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.AssemblyInfoInputs.cache
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.AssemblyInfo.cs
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.csproj.CoreCompileInputs.cache
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/refint/CVTrack.Persistence.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.pdb
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/ref/CVTrack.Persistence.dll

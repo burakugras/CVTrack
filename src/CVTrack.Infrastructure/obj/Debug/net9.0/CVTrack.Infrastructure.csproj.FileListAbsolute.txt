@@ -1,0 +1,11 @@
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/bin/Debug/net9.0/CVTrack.Infrastructure.deps.json
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/bin/Debug/net9.0/CVTrack.Infrastructure.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/bin/Debug/net9.0/CVTrack.Infrastructure.pdb
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/CVTrack.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/CVTrack.Infrastructure.AssemblyInfoInputs.cache
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/CVTrack.Infrastructure.AssemblyInfo.cs
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/CVTrack.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/CVTrack.Infrastructure.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/refint/CVTrack.Infrastructure.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/CVTrack.Infrastructure.pdb
+/Users/burak/Projeler/CVTrack/src/CVTrack.Infrastructure/obj/Debug/net9.0/ref/CVTrack.Infrastructure.dll
