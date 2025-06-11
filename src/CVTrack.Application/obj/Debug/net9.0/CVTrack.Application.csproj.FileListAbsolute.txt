@@ -9,3 +9,8 @@
 /Users/burak/Projeler/CVTrack/src/CVTrack.Application/obj/Debug/net9.0/refint/CVTrack.Application.dll
 /Users/burak/Projeler/CVTrack/src/CVTrack.Application/obj/Debug/net9.0/CVTrack.Application.pdb
 /Users/burak/Projeler/CVTrack/src/CVTrack.Application/obj/Debug/net9.0/ref/CVTrack.Application.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Application/bin/Debug/net9.0/CVTrack.Domain.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Application/bin/Debug/net9.0/CVTrack.Domain.pdb
+/Users/burak/Projeler/CVTrack/src/CVTrack.Application/obj/Debug/net9.0/CVTrack.Application.csproj.AssemblyReference.cache
+/Users/burak/Projeler/CVTrack/src/CVTrack.Application/obj/Debug/net9.0/CVTrack.Application.sourcelink.json
+/Users/burak/Projeler/CVTrack/src/CVTrack.Application/obj/Debug/net9.0/CVTrack..9272FFF1.Up2Date

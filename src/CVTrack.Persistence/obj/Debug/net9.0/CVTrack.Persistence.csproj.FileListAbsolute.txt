@@ -9,3 +9,12 @@
 /Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/refint/CVTrack.Persistence.dll
 /Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.pdb
 /Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/ref/CVTrack.Persistence.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Persistence.runtimeconfig.json
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Application.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Domain.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Domain.pdb
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/bin/Debug/net9.0/CVTrack.Application.pdb
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.csproj.AssemblyReference.cache
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.sourcelink.json
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack..330BFD96.Up2Date
+/Users/burak/Projeler/CVTrack/src/CVTrack.Persistence/obj/Debug/net9.0/CVTrack.Persistence.genruntimeconfig.cache
