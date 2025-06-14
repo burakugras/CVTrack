@@ -111,6 +111,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+
+
 // **EN BAŞTA** exception page
 app.UseDeveloperExceptionPage();
 
