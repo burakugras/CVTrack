@@ -26,3 +26,7 @@ Logs/
 appsettings.Development.json
 appsettings.*.json.user
 secrets.json
+
+
+# ASP.NET Core default config
+appsettings.json
