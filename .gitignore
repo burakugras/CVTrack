@@ -1,32 +1,52 @@
 # Build output
 bin/
 obj/
+publish/
 
-# Rider, VSCode, VS settings
+# IDE & editör ayarları
 .vscode/
+.vs/
 .idea/
 *.suo
 *.user
 *.userprefs
 
-# macOS temp files
+# macOS temp dosyaları
 .DS_Store
 
-# Entity Framework Migrations folder (opsiyonel)
-CVTrack.Persistence/Migrations/
+# Test çıktıları
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
 
 # Local file uploads (CV dosyaları)
 Uploads/
 
-# Serilog rolling log dosyaları
+# Serilog log dosyaları
 Logs/
 *.log
 
-# User secrets & local settings
+# Ortam değişkenleri / secrets
+appsettings.json
 appsettings.Development.json
 appsettings.*.json.user
 secrets.json
+.env
+.env.*.local
 
+# Paketler / cache
+node_modules/
+.packages/
+.nuget/
+*.nupkg
 
-# ASP.NET Core default config
-appsettings.json
+# Veritabanı dosyaları (SQLite, MDF vs.)
+*.db
+*.db-journal
+*.mdf
+*.ldf
+
+# Docker / compose override
+docker-compose.override.yml
+docker-compose.*.yml
