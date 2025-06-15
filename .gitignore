@@ -1,0 +1,28 @@
+# Build output
+bin/
+obj/
+
+# Rider, VSCode, VS settings
+.vscode/
+.idea/
+*.suo
+*.user
+*.userprefs
+
+# macOS temp files
+.DS_Store
+
+# Entity Framework Migrations folder (opsiyonel)
+CVTrack.Persistence/Migrations/
+
+# Local file uploads (CV dosyaları)
+Uploads/
+
+# Serilog rolling log dosyaları
+Logs/
+*.log
+
+# User secrets & local settings
+appsettings.Development.json
+appsettings.*.json.user
+secrets.json

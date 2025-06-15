@@ -13,9 +13,22 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using CVTrack.Api.Swagger; // FileUploadOperationFilter için
+using CVTrack.Api.Swagger;
+using Serilog; // FileUploadOperationFilter için
 
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/log-.txt",
+                rollingInterval: RollingInterval.Day,
+                retainedFileCountLimit: 7)
+    .CreateLogger();
+    
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog();
 
 // 1) DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>

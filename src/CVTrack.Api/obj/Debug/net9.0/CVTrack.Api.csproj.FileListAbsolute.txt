@@ -79,3 +79,13 @@
 /Users/burak/Projeler/CVTrack/src/CVTrack.Api/obj/Debug/net9.0/CVTrack.Api.pdb
 /Users/burak/Projeler/CVTrack/src/CVTrack.Api/obj/Debug/net9.0/CVTrack.Api.genruntimeconfig.cache
 /Users/burak/Projeler/CVTrack/src/CVTrack.Api/obj/Debug/net9.0/ref/CVTrack.Api.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Microsoft.Extensions.DependencyModel.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.AspNetCore.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.Extensions.Hosting.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.Extensions.Logging.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.Formatting.Compact.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.Settings.Configuration.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.Sinks.Console.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.Sinks.Debug.dll
+/Users/burak/Projeler/CVTrack/src/CVTrack.Api/bin/Debug/net9.0/Serilog.Sinks.File.dll
