@@ -31,7 +31,8 @@ public class RegisterUserService
             FirstName = command.FirstName,
             LastName = command.LastName,
             Email = command.Email,
-            PasswordHash = hashedPassword
+            PasswordHash = hashedPassword,
+            Role        = UserRole.User
         };
 
         var createdUser = await _userRepository.AddAsync(user);

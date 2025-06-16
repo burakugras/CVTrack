@@ -25,7 +25,7 @@ Log.Logger = new LoggerConfiguration()
                 rollingInterval: RollingInterval.Day,
                 retainedFileCountLimit: 7)
     .CreateLogger();
-    
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.UseSerilog();
@@ -37,8 +37,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // 2) Repositories & Services
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<RegisterUserService>();
-builder.Services.AddScoped<LoginUserService>();
+// builder.Services.AddScoped<LoginUserService>();
+builder.Services.AddScoped<ILoginUserService, LoginUserService>();
 builder.Services.AddScoped<ITokenService, JwtTokenService>();
+
+builder.Services.AddScoped<IAdminUserService, AdminUserService>();
+
 
 builder.Services.AddScoped<ICVRepository, CVRepository>();
 builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();

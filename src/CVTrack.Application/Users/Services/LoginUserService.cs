@@ -1,39 +1,47 @@
-using CVTrack.Application.Users.Commands;
-using CVTrack.Application.Interfaces;
-using CVTrack.Application.DTOs;
+using System;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
+using CVTrack.Application.Interfaces;
+using CVTrack.Application.Users.Commands;
+using CVTrack.Domain.Entities;
 
 namespace CVTrack.Application.Users.Services;
 
-public class LoginUserService
+public class LoginUserService : ILoginUserService
 {
     private readonly IUserRepository _userRepository;
+    private readonly ITokenService _tokenService;
 
-    public LoginUserService(IUserRepository userRepository)
+    public LoginUserService(
+        IUserRepository userRepository,
+        ITokenService tokenService)
     {
         _userRepository = userRepository;
+        _tokenService = tokenService;
     }
 
-    public async Task<UserDto?> LoginAsync(LoginUserCommand command)
+    /// <summary>
+    /// Başarılı login olursa JWT token döner; başarısızsa null.
+    /// </summary>
+    public async Task<string?> LoginAsync(LoginUserCommand command)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email);
         if (user == null)
             return null;
 
-        // Girilen şifreyle veritabanındaki hash’i karşılaştır
+        // Şifre karşılaştırması
         var hashedInput = HashPassword(command.Password);
         if (user.PasswordHash != hashedInput)
             return null;
 
-        // Başarılıysa DTO döndür
-        return new UserDto
-        {
-            Id = user.Id,
-            FirstName = user.FirstName,
-            LastName = user.LastName,
-            Email = user.Email
-        };
+        // Token üretirken role bilgisini de veriyoruz
+        var token = _tokenService.CreateToken(
+            user.Id,
+            user.Email,
+            user.Role);
+
+        return token;
     }
 
     private string HashPassword(string password)
@@ -44,3 +52,4 @@ public class LoginUserService
         return Convert.ToBase64String(hash);
     }
 }
+
