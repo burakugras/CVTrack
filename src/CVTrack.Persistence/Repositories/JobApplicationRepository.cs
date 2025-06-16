@@ -53,4 +53,12 @@ public class JobApplicationRepository : IJobApplicationRepository
         _context.JobApplications.Remove(application);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<JobApplication>> GetAllAsync()
+    {
+        return await _context.JobApplications
+                             .Include(j => j.CV)
+                             .Include(j => j.User)
+                             .ToListAsync();
+    }
 }

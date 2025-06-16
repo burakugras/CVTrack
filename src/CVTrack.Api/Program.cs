@@ -43,6 +43,8 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
+builder.Services.AddScoped<IAdminJobApplicationService, AdminJobApplicationService>();
+
 
 builder.Services.AddScoped<ICVRepository, CVRepository>();
 builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();

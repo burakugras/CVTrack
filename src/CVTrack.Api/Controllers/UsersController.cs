@@ -21,7 +21,6 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserDto>> Register([FromBody] RegisterUserCommand cmd)
     {
         var created = await _registerService.RegisterAsync(cmd);
-        // 201 + Location header (örneğin e-mail ile lookup endpoint'ine)
         return CreatedAtAction(null, new { email = created.Email }, created);
     }
 

@@ -102,7 +102,6 @@ namespace CVTrack.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            // Opsiyonel: varlığı alıp UserId kontrolü yapabilirsiniz
             await _jobService.DeleteAsync(id);
             return NoContent();
         }

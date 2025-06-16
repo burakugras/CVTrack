@@ -9,4 +9,5 @@ public interface IJobApplicationRepository
     Task<JobApplication> AddAsync(JobApplication application);
     Task UpdateAsync(JobApplication jobApplication);
     Task RemoveAsync(JobApplication jobApplication);
+    Task<IEnumerable<JobApplication>> GetAllAsync();
 }

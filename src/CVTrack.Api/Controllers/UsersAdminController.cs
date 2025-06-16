@@ -29,6 +29,7 @@ namespace CVTrack.Api.Controllers.Admin
         [HttpPut("{id}/role")]
         public async Task<IActionResult> UpdateRole(Guid id, [FromBody] UpdateUserRoleCommand cmd)
         {
+            //double entry
             if (id != cmd.UserId) return BadRequest("URL ve body Id uyuşmuyor.");
             await _admin.UpdateRoleAsync(cmd);
             return NoContent();
