@@ -41,4 +41,17 @@ public class CVRepository : ICVRepository
         _context.CVs.Remove(cv);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<CV>> GetAllAsync()
+    {
+        return await _context.CVs
+                             .Include(c => c.User)
+                             .ToListAsync();
+    }
+
+    public async Task UpdateAsync(CV cv)
+    {
+        _context.CVs.Update(cv);
+        await _context.SaveChangesAsync();
+    }
 }

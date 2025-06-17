@@ -44,7 +44,7 @@ builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<IAdminUserService, AdminUserService>();
 
 builder.Services.AddScoped<IAdminJobApplicationService, AdminJobApplicationService>();
-
+builder.Services.AddScoped<IAdminCvService, AdminCvService>();
 
 builder.Services.AddScoped<ICVRepository, CVRepository>();
 builder.Services.AddScoped<IJobApplicationRepository, JobApplicationRepository>();
@@ -132,12 +132,12 @@ var app = builder.Build();
 
 
 
-// **EN BAŞTA** exception page
+// EN BAŞTA exception page
 app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 
-// Swagger UI’ı köke taşı
+
 app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
