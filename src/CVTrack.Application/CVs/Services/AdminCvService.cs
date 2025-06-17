@@ -25,10 +25,26 @@ public class AdminCvService : IAdminCvService
         });
     }
 
+    public async Task<AdminCvDto> GetByIdAsync(Guid id)
+    {
+        var c = await _repo.GetByIdAsync(id) ?? throw new KeyNotFoundException($"CV Id={id} bulunamadı.");
+
+        return new AdminCvDto
+        {
+            Id = c.Id,
+            UserId = c.UserId,
+            UserFirstName = c.User!.FirstName,
+            UserLastName = c.User.LastName,
+            UserEmail = c.User.Email,
+            FileName = c.FileName,
+            UploadDate = c.UploadDate
+        };
+
+    }
+
     public async Task DeleteAsync(Guid id)
     {
-        var cv = await _repo.GetByIdAsync(id)
-               ?? throw new KeyNotFoundException($"CV Id={id} bulunamadı.");
+        var cv = await _repo.GetByIdAsync(id) ?? throw new KeyNotFoundException($"CV Id={id} bulunamadı.");
 
         await _repo.RemoveAsync(cv);
     }

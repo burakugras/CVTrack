@@ -12,9 +12,14 @@ namespace CVTrack.Api.Controllers.Admin;
 public class CvsAdminController : ControllerBase
 {
     private readonly IAdminCvService _adminCv;
+    private readonly IFileService _fileService;
 
-    public CvsAdminController(IAdminCvService adminCv)
-        => _adminCv = adminCv;
+    public CvsAdminController(IAdminCvService adminCv, IFileService fileService)
+    {
+        _adminCv = adminCv;
+        _fileService = fileService;
+    }
+
 
     // GET api/admin/CvsAdmin
     [HttpGet]
@@ -30,6 +35,25 @@ public class CvsAdminController : ControllerBase
     {
         await _adminCv.DeleteAsync(id);
         return NoContent();
+    }
+
+    [HttpGet("{id}/download")]
+    public async Task<IActionResult> Download(Guid id)
+    {
+        var cvDto = await _adminCv.GetByIdAsync(id);
+
+        byte[] content;
+
+        try
+        {
+            content = await _fileService.GetFileAsync(cvDto.FileName);
+        }
+        catch (FileNotFoundException)
+        {
+            return NotFound("Dosya diskte bulunmadı.");
+        }
+
+        return File(content, "application/pdf", cvDto.FileName);
     }
 }
 
