@@ -22,11 +22,13 @@ namespace CVTrack.Api.Controllers
     {
         private readonly CvService _cvService;
         private readonly IFileService _fileService;
+        private readonly IAuditService _auditService;
 
-        public CvsController(CvService cvService, IFileService fileService)
+        public CvsController(CvService cvService, IFileService fileService, IAuditService auditService)
         {
             _cvService = cvService;
             _fileService = fileService;
+            _auditService = auditService;
         }
 
         [HttpGet]
@@ -52,7 +54,7 @@ namespace CVTrack.Api.Controllers
                                      ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
 
             var ext = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{ext}";
+            var fileName = $"{Guid.NewGuid()}{ext}"; //
 
             byte[] content;
             using var ms = new MemoryStream();
@@ -94,6 +96,8 @@ namespace CVTrack.Api.Controllers
                                      ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
             if (cvDto.UserId != userId)
                 return Forbid();
+
+            await _auditService.LogDownloadAsync(userId, id);
 
             byte[] content;
             try

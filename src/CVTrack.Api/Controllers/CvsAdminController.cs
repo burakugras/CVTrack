@@ -3,6 +3,7 @@ using CVTrack.Application.Interfaces;
 using CVTrack.Application.CVs.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CVTrack.Api.Controllers.Admin;
 
@@ -13,11 +14,13 @@ public class CvsAdminController : ControllerBase
 {
     private readonly IAdminCvService _adminCv;
     private readonly IFileService _fileService;
+    private readonly IAuditService _auditService;
 
-    public CvsAdminController(IAdminCvService adminCv, IFileService fileService)
+    public CvsAdminController(IAdminCvService adminCv, IFileService fileService, IAuditService auditService)
     {
         _adminCv = adminCv;
         _fileService = fileService;
+        _auditService = auditService;
     }
 
 
@@ -41,6 +44,9 @@ public class CvsAdminController : ControllerBase
     public async Task<IActionResult> Download(Guid id)
     {
         var cvDto = await _adminCv.GetByIdAsync(id);
+        var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+        await _auditService.LogDownloadAsync(userId,id);
 
         byte[] content;
 

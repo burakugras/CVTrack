@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using CVTrack.Api.Swagger;
-using Serilog; // FileUploadOperationFilter için
+using Serilog;
+using CVTrack.Application.Services; // FileUploadOperationFilter için
 
 
 Log.Logger = new LoggerConfiguration()
@@ -52,6 +53,9 @@ builder.Services.AddScoped<JobApplicationService>();
 builder.Services.AddScoped<CvService>();
 
 builder.Services.AddScoped<IFileService, LocalFileService>();
+
+builder.Services.AddScoped<IAuditRepository, AuditRepository>();
+builder.Services.AddScoped<IAuditService, AuditService>();
 
 // 3) JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

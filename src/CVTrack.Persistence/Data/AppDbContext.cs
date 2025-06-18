@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<CV> CVs { get; set; } = null!;
     public DbSet<JobApplication> JobApplications { get; set; } = null!;
+    public DbSet<Audit> Audits { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
