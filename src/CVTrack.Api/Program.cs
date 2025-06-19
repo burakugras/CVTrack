@@ -56,6 +56,8 @@ builder.Services.AddScoped<IFileService, LocalFileService>();
 
 builder.Services.AddScoped<IAuditRepository, AuditRepository>();
 builder.Services.AddScoped<IAuditService, AuditService>();
+builder.Services.AddScoped<IAdminAuditService, AdminAuditService>();
+
 
 // 3) JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
