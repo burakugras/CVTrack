@@ -6,5 +6,6 @@ namespace CVTrack.Application.Interfaces;
 public interface IAdminAuditService
 {
     Task<IEnumerable<AuditDto>> GetAllAsync(GetAuditsQuery query);
+    // Task<IEnumerable<AuditDto>> GetAllAuditsAsync();
 }
 

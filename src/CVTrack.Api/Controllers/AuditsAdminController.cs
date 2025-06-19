@@ -24,4 +24,11 @@ public class AuditsAdminController : ControllerBase
         var list = await _adminAudit.GetAllAsync(query);
         return Ok(list);
     }
+
+    [HttpGet("all")]
+    public async Task<ActionResult<IEnumerable<AuditDto>>> GetAll()
+    {
+        var list = await _adminAudit.GetAllAsync(new GetAuditsQuery());
+        return Ok(list);
+    }
 }
