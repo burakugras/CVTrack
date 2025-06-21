@@ -1,11 +1,13 @@
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
 using CVTrack.Application.JobApplications.Commands;
 using CVTrack.Application.JobApplications.Queries;
 
 namespace CVTrack.Application.JobApplications.Services;
-
 public class AdminJobApplicationService : IAdminJobApplicationService
 {
     private readonly IJobApplicationRepository _repo;
@@ -20,9 +22,10 @@ public class AdminJobApplicationService : IAdminJobApplicationService
         {
             Id = j.Id,
             UserId = j.UserId,
-            UserFirstName = j.User.FirstName,
-            UserLastName = j.User.LastName,
-            UserMail = j.User.Email,
+            // j.User null ise boş string dönecek
+            UserFirstName = j.User?.FirstName ?? string.Empty,
+            UserLastName = j.User?.LastName ?? string.Empty,
+            UserMail = j.User?.Email ?? string.Empty,
             CVId = j.CVId,
             CompanyName = j.CompanyName,
             ApplicationDate = j.ApplicationDate,
@@ -48,4 +51,3 @@ public class AdminJobApplicationService : IAdminJobApplicationService
         await _repo.RemoveAsync(j);
     }
 }
-
