@@ -1,11 +1,5 @@
 namespace CVTrack.Domain.Entities;
 
-public enum AuditAction
-{
-    Downloaded
-    // ileride Uploaded, Deleted, vs. eklenebilir
-}
-
 public class Audit
 {
     public Guid Id { get; set; }

@@ -31,7 +31,6 @@ public class LocalFileService : IFileService
         return Task.CompletedTask;
     }
 
-    // — eklenen metod —
     public async Task<byte[]> GetFileAsync(string fileName)
     {
         var filePath = Path.Combine(_storagePath, fileName);

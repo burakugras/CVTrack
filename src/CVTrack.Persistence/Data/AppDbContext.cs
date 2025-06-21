@@ -52,7 +52,9 @@ public class AppDbContext : DbContext
                 .HasOne(j => j.CV)
                 .WithMany(c => c.JobApplications)
                 .HasForeignKey(j => j.CVId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.Cascade);
+
         });
     }
 }

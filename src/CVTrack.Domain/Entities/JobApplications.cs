@@ -1,12 +1,5 @@
 namespace CVTrack.Domain.Entities;
 
-public enum ApplicationStatus
-{
-    Pending,
-    Accepted,
-    Rejected
-}
-
 public class JobApplication
 {
     public Guid Id { get; set; }
