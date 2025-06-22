@@ -9,10 +9,12 @@ namespace CVTrack.Application.CVs.Services;
 public class CvService
 {
     private readonly ICVRepository _cvRepository;
+    private readonly IFileService _fileService;
 
-    public CvService(ICVRepository cvRepository)
+    public CvService(ICVRepository cvRepository, IFileService fileService)
     {
         _cvRepository = cvRepository;
+        _fileService = fileService;
     }
 
     public async Task<CVDto> CreateAsync(CreateCvCommand cmd)
@@ -51,9 +53,13 @@ public class CvService
     public async Task DeleteAsync(Guid id)
     {
         var cv = await _cvRepository.GetByIdAsync(id)
-                 ?? throw new KeyNotFoundException($"CV with Id={id} not found.");
+             ?? throw new KeyNotFoundException($"CV with Id={id} not found.");
 
-        await _cvRepository.RemoveAsync(cv);
+        // await _fileService.DeleteFileAsync(cv.FileName);  // Dosyayı silmek
+
+        cv.IsDeleted = true;
+
+        await _cvRepository.UpdateAsync(cv);
     }
 
     public async Task<CVDto> GetByIdAsync(Guid id)

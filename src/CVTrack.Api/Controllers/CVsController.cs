@@ -54,7 +54,7 @@ namespace CVTrack.Api.Controllers
                                      ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
 
             var ext = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{ext}"; //
+            var fileName = $"{Guid.NewGuid()}{ext}";
 
             byte[] content;
             using var ms = new MemoryStream();

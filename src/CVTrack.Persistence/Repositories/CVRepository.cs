@@ -16,6 +16,7 @@ public class CVRepository : ICVRepository
     public async Task<CV?> GetByIdAsync(Guid id)
     {
         return await _context.CVs
+            .Where(c => c.Id == id && !c.IsDeleted)
             .Include(c => c.User)
             .Include(c => c.JobApplications)
             .FirstOrDefaultAsync(c => c.Id == id);
@@ -24,7 +25,7 @@ public class CVRepository : ICVRepository
     public async Task<IEnumerable<CV>> GetByUserIdAsync(Guid userId)
     {
         return await _context.CVs
-            .Where(c => c.UserId == userId)
+            .Where(c => c.UserId == userId && !c.IsDeleted)
             .Include(c => c.JobApplications)
             .ToListAsync();
     }

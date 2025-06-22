@@ -46,7 +46,9 @@ public class JobApplicationService
     {
         var existing = await _jobRepo.GetByIdAsync(id)
                       ?? throw new KeyNotFoundException($"Id={id} bulunamadı.");
-        await _jobRepo.RemoveAsync(existing);
+
+        existing.IsDeleted = true;
+        await _jobRepo.UpdateAsync(existing);
     }
 
     public async Task<IEnumerable<JobApplication>> GetByUserAsync(Guid userId)

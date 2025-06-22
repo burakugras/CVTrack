@@ -46,7 +46,9 @@ public class AdminCvService : IAdminCvService
     {
         var cv = await _repo.GetByIdAsync(id) ?? throw new KeyNotFoundException($"CV Id={id} bulunamadı.");
 
-        await _repo.RemoveAsync(cv);
+        cv.IsDeleted = true;
+
+        await _repo.UpdateAsync(cv);
     }
 }
 

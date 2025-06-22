@@ -6,6 +6,7 @@ public class CV
     public Guid UserId { get; set; }
     public string FileName { get; set; } = null!;
     public DateTime UploadDate { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     // Navigation properties
     public User User { get; set; } = null!;

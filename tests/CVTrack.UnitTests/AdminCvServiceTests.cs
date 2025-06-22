@@ -71,18 +71,19 @@ public class AdminCvServiceTests
     }
 
     [Fact]
-    public async Task DeleteAsync_Should_Remove_CV_When_Found()
+    public async Task DeleteAsync_Should_SoftDelete_When_CV_Found()
     {
         // Arrange
         var id = Guid.NewGuid();
-        var cv = new CV { Id = id };
+        var cv = new CV { Id = id, UserId = Guid.NewGuid(), FileName = "x.pdf", UploadDate = DateTime.UtcNow, IsDeleted = false };
         _repo.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(cv);
 
         // Act
         await _service.DeleteAsync(id);
 
         // Assert
-        _repo.Verify(r => r.RemoveAsync(cv), Times.Once);
+        _repo.Verify(r => r.UpdateAsync(cv), Times.Once);
+        cv.IsDeleted.Should().BeTrue();
     }
 
     [Fact]
@@ -100,4 +101,3 @@ public class AdminCvServiceTests
                  .WithMessage($"CV Id={id} bulunamadı.");
     }
 }
-

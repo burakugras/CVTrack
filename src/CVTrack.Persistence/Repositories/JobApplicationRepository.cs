@@ -15,6 +15,7 @@ public class JobApplicationRepository : IJobApplicationRepository
     public async Task<JobApplication> GetByIdAsync(Guid id)
     {
         var jobApplication = await _context.JobApplications
+            .Where(j => j.Id == id && !j.IsDeleted)
             .Include(j => j.User)
             .Include(j => j.CV)
             .FirstOrDefaultAsync(j => j.Id == id);
@@ -30,7 +31,7 @@ public class JobApplicationRepository : IJobApplicationRepository
     public async Task<IEnumerable<JobApplication>> GetByUserIdAsync(Guid userId)
     {
         return await _context.JobApplications
-            .Where(j => j.UserId == userId)
+            .Where(j => j.UserId == userId && !j.IsDeleted)
             .Include(j => j.CV)
             .ToListAsync();
     }

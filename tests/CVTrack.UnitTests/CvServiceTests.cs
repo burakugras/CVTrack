@@ -18,12 +18,14 @@ namespace CVTrack.UnitTests
     public class CvServiceTests
     {
         private readonly Mock<ICVRepository> _cvRepoMock;
+        private readonly Mock<IFileService> _fileServiceMock;
         private readonly CvService _service;
 
         public CvServiceTests()
         {
             _cvRepoMock = new Mock<ICVRepository>();
-            _service = new CvService(_cvRepoMock.Object);
+            _fileServiceMock = new Mock<IFileService>();
+            _service = new CvService(_cvRepoMock.Object, _fileServiceMock.Object);
         }
 
         [Fact]
@@ -83,19 +85,19 @@ namespace CVTrack.UnitTests
         }
 
         [Fact]
-        public async Task DeleteAsync_Should_Remove_When_CV_Exists()
+        public async Task DeleteAsync_Should_SoftDelete_When_CV_Exists()
         {
             // Arrange
             var id = Guid.NewGuid();
-            var cv = new CV { Id = id, UserId = Guid.NewGuid(), FileName = "x.pdf", UploadDate = DateTime.UtcNow };
+            var cv = new CV { Id = id, UserId = Guid.NewGuid(), FileName = "x.pdf", UploadDate = DateTime.UtcNow, IsDeleted = false };
             _cvRepoMock.Setup(r => r.GetByIdAsync(id)).ReturnsAsync(cv);
 
             // Act
-            Func<Task> act = () => _service.DeleteAsync(id);
+            await _service.DeleteAsync(id);
 
             // Assert
-            await act.Should().NotThrowAsync();
-            _cvRepoMock.Verify(r => r.RemoveAsync(cv), Times.Once);
+            _cvRepoMock.Verify(r => r.UpdateAsync(cv), Times.Once);
+            cv.IsDeleted.Should().BeTrue();
         }
 
         [Fact]

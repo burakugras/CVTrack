@@ -8,6 +8,7 @@ using CVTrack.Application.JobApplications.Commands;
 using CVTrack.Application.JobApplications.Queries;
 
 namespace CVTrack.Application.JobApplications.Services;
+
 public class AdminJobApplicationService : IAdminJobApplicationService
 {
     private readonly IJobApplicationRepository _repo;
@@ -48,6 +49,8 @@ public class AdminJobApplicationService : IAdminJobApplicationService
         var j = await _repo.GetByIdAsync(cmd.Id)
               ?? throw new KeyNotFoundException($"Id={cmd.Id} bulunamadı.");
 
-        await _repo.RemoveAsync(j);
+        j.IsDeleted = true;
+
+        await _repo.UpdateAsync(j);
     }
 }
