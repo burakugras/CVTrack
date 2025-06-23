@@ -25,6 +25,13 @@ public class JobApplicationsAdminController : ControllerBase
         return Ok(list);
     }
 
+    [HttpGet("active")]
+    public async Task<IActionResult> GetActiveJobApplicationsForAdmin()
+    {
+        var jobApplications = await _admin.GetAllActiveJobApplications(new GetAllJobApplicationsQuery());
+        return Ok(jobApplications);
+    }
+
     // PUT api/admin/JobApplicationsAdmin/{id}/status
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(

@@ -53,4 +53,22 @@ public class AdminJobApplicationService : IAdminJobApplicationService
 
         await _repo.UpdateAsync(j);
     }
+
+    public async Task<IEnumerable<AdminJobApplicationDto>> GetAllActiveJobApplications(GetAllJobApplicationsQuery _)
+    {
+        var apps = await _repo.GetAllActiveJobApplicationsAsync();
+        return apps.Select(j => new AdminJobApplicationDto
+        {
+            Id = j.Id,
+            UserId = j.UserId,
+            UserFirstName = j.User?.FirstName ?? string.Empty,
+            UserLastName = j.User?.LastName ?? string.Empty,
+            UserMail = j.User?.Email ?? string.Empty,
+            CVId = j.CVId,
+            CompanyName = j.CompanyName,
+            ApplicationDate = j.ApplicationDate,
+            Status = j.Status,
+            Notes = j.Notes
+        });
+    }
 }

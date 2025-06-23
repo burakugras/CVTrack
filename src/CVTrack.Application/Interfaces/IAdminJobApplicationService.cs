@@ -10,5 +10,6 @@ public interface IAdminJobApplicationService
     Task<IEnumerable<AdminJobApplicationDto>> GetAllAsync(GetAllJobApplicationsQuery query);
     Task UpdateStatusAsync(UpdateJobApplicationStatusCommand command);
     Task DeleteAsync(DeleteJobApplicationCommand command);
+    Task<IEnumerable<AdminJobApplicationDto>> GetAllActiveJobApplications(GetAllJobApplicationsQuery query);
 }
 

@@ -62,4 +62,11 @@ public class JobApplicationRepository : IJobApplicationRepository
                              .Include(j => j.User)
                              .ToListAsync();
     }
+
+    public async Task<IEnumerable<JobApplication>> GetAllActiveJobApplicationsAsync()
+    {
+        return await _context.JobApplications
+                             .Where(j => !j.IsDeleted)
+                             .ToListAsync();
+    }
 }
