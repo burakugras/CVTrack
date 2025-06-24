@@ -41,7 +41,7 @@ public class AuditService : IAuditService
             Action = AuditAction.Downloaded,
             Timestamp = DateTime.UtcNow
         };
-        
+
         await _auditRepo.AddAsync(entry);
 
         _logger.LogInformation(

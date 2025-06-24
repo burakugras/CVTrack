@@ -2,6 +2,7 @@ using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
 using CVTrack.Application.Users.Commands;
 using CVTrack.Application.Users.Queries;
+using CVTrack.Domain.Common;
 using CVTrack.Domain.Entities;
 
 namespace CVTrack.Application.Interfaces;
@@ -24,6 +25,62 @@ public class AdminUserService : IAdminUserService
             Email = u.Email,
             Role = u.Role.ToString()
         });
+    }
+
+    public async Task<PagedResult<AdminUserDto>> GetAllPagedAsync(GetAllUsersQuery query)
+    {
+        var pagination = new PaginationRequest
+        {
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize
+        };
+
+        PagedResult<User> pagedUsers;
+
+        // Search varsa
+        if (!string.IsNullOrEmpty(query.SearchTerm))
+        {
+            pagedUsers = await _userRepo.SearchUsersPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize,
+                query.SearchTerm
+            );
+        }
+        // Role filter varsa
+        else if (query.Role.HasValue)
+        {
+            pagedUsers = await _userRepo.GetUsersByRolePagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize,
+                query.Role.Value
+            );
+        }
+        // Normal pagination
+        else
+        {
+            pagedUsers = await _userRepo.GetPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize
+            );
+        }
+
+        // User'ları AdminUserDto'ya dönüştür
+        var adminUserDtos = pagedUsers.Items.Select(u => new AdminUserDto
+        {
+            Id = u.Id,
+            FirstName = u.FirstName,
+            LastName = u.LastName,
+            Email = u.Email,
+            Role = u.Role.ToString()
+        });
+
+        return new PagedResult<AdminUserDto>
+        {
+            Items = adminUserDtos,
+            TotalCount = pagedUsers.TotalCount,
+            PageNumber = pagedUsers.PageNumber,
+            PageSize = pagedUsers.PageSize
+        };
     }
 
     public async Task UpdateRoleAsync(UpdateUserRoleCommand cmd)

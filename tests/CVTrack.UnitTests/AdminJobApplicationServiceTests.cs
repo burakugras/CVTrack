@@ -80,7 +80,7 @@ public class AdminJobApplicationServiceTests
     }
 
     [Fact]
-    public async Task DeleteAsync_Should_Call_RemoveAsync_When_Exists()
+    public async Task DeleteAsync_Should_Call_UpdateAsync_When_Exists()
     {
         // Arrange
         var id = Guid.NewGuid();
@@ -91,7 +91,7 @@ public class AdminJobApplicationServiceTests
         await _service.DeleteAsync(new DeleteJobApplicationCommand { Id = id });
 
         // Assert
-        _repo.Verify(r => r.RemoveAsync(entity), Times.Once);
+        _repo.Verify(r => r.UpdateAsync(It.Is<JobApplication>(j => j.Id == id)), Times.Once);
     }
 }
 

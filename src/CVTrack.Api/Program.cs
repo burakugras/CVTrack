@@ -15,7 +15,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using CVTrack.Api.Swagger;
 using Serilog;
-using CVTrack.Application.Services; // FileUploadOperationFilter için
+using CVTrack.Application.Services;// FileUploadOperationFilter için
 
 
 Log.Logger = new LoggerConfiguration()
