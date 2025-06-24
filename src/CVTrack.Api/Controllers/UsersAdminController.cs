@@ -20,12 +20,14 @@ namespace CVTrack.Api.Controllers.Admin
             => _admin = admin;
 
         // GET api/admin/users
+        /*
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AdminUserDto>>> GetAll()
         {
             var list = await _admin.GetAllAsync(new GetAllUsersQuery());
             return Ok(list);
         }
+        */
 
         // PUT api/admin/users/{id}/role
         [HttpPut("{id}/role")]

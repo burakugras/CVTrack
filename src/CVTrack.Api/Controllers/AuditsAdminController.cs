@@ -18,9 +18,14 @@ public class AuditsAdminController : ControllerBase
 
 
     /// GET api/admin/audits?cvId={cvId}&userId={userId}
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<AuditDto>>> Get([FromQuery] GetAuditsQuery query)
+    [HttpGet("getByUserId")]
+    public async Task<ActionResult<IEnumerable<AuditDto>>> GetByUserId([FromQuery] Guid userId)
     {
+        var query = new GetAuditsQuery { UserId = userId };
+        if (userId == Guid.Empty)
+        {
+            return BadRequest("UserId is required.");
+        }
         var list = await _adminAudit.GetAllAsync(query);
         return Ok(list);
     }

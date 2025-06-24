@@ -5,7 +5,7 @@ using CVTrack.Application.Users.Queries;
 using CVTrack.Domain.Common;
 using CVTrack.Domain.Entities;
 
-namespace CVTrack.Application.Interfaces;
+namespace CVTrack.Application.Users.Services;
 
 public class AdminUserService : IAdminUserService
 {

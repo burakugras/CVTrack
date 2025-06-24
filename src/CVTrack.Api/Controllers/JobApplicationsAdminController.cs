@@ -2,6 +2,8 @@ using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
 using CVTrack.Application.JobApplications.Commands;
 using CVTrack.Application.JobApplications.Queries;
+using CVTrack.Domain.Common;
+using CVTrack.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,11 +20,36 @@ public class JobApplicationsAdminController : ControllerBase
         => _admin = admin;
 
     // GET api/admin/JobApplicationsAdmin
+    /*
     [HttpGet]
     public async Task<ActionResult<IEnumerable<AdminJobApplicationDto>>> GetAll()
     {
         var list = await _admin.GetAllAsync(new GetAllJobApplicationsQuery());
         return Ok(list);
+    }
+    */
+
+    [HttpGet("getall")]
+    public async Task<ActionResult<PagedResult<AdminJobApplicationDto>>> GetAll(
+           [FromQuery] int pageNumber = 1,
+           [FromQuery] int pageSize = 10,
+           [FromQuery] string? searchTerm = null,
+           [FromQuery] ApplicationStatus? status = null)
+    {
+        var query = new GetAllJobApplicationsQuery
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            SearchTerm = searchTerm,
+            Status = status
+        };
+
+        var result = await _admin.GetAllPagedAsync(query);
+
+        // Response header'larına pagination bilgilerini ekle
+        AddPaginationHeaders(result);
+
+        return Ok(result);
     }
 
     [HttpGet("active")]
@@ -49,6 +76,15 @@ public class JobApplicationsAdminController : ControllerBase
     {
         await _admin.DeleteAsync(new DeleteJobApplicationCommand { Id = id });
         return NoContent();
+    }
+
+    private void AddPaginationHeaders<T>(PagedResult<T> pagedResult)
+    {
+        Response.Headers.Append("X-Pagination-TotalCount", pagedResult.TotalCount.ToString());
+        Response.Headers.Append("X-Pagination-TotalPages", pagedResult.TotalPages.ToString());
+        Response.Headers.Append("X-Pagination-CurrentPage", pagedResult.PageNumber.ToString());
+        Response.Headers.Append("X-Pagination-HasNext", pagedResult.HasNextPage.ToString());
+        Response.Headers.Append("X-Pagination-HasPrevious", pagedResult.HasPreviousPage.ToString());
     }
 }
 

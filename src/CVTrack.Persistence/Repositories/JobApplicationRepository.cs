@@ -1,4 +1,5 @@
 using CVTrack.Application.Interfaces;
+using CVTrack.Domain.Common;
 using CVTrack.Domain.Entities;
 using CVTrack.Persistence.Data;
 using Microsoft.EntityFrameworkCore;
@@ -67,6 +68,86 @@ public class JobApplicationRepository : IJobApplicationRepository
     {
         return await _context.JobApplications
                              .Where(j => !j.IsDeleted)
+                             .Include(j => j.User)
+                             .Include(j => j.CV)
                              .ToListAsync();
+    }
+
+    public async Task<PagedResult<JobApplication>> GetPagedAsync(int pageNumber, int pageSize)
+    {
+        var query = _context.JobApplications
+                            .Where(j => !j.IsDeleted)
+                            .Include(j => j.User)
+                            .Include(j => j.CV);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(u => u.UserId)
+            .ThenBy(u => u.ApplicationDate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<JobApplication>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+
+    public async Task<PagedResult<JobApplication>> GetJobApplicationsByStatusPagedAsync(int pageNumber, int pageSize, ApplicationStatus status)
+    {
+        var query = _context.JobApplications
+                            .Where(j => j.Status == status && !j.IsDeleted)
+                            .Include(j => j.User)
+                            .Include(j => j.CV);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(u => u.UserId)
+            .ThenBy(u => u.ApplicationDate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<JobApplication>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+
+    public async Task<PagedResult<JobApplication>> SearchJobApplicationsPagedAsync(int pageNumber, int pageSize, string searchTerm)
+    {
+        var query = _context.JobApplications
+                            .Where(j =>
+                                (j.CompanyName.Contains(searchTerm) ||
+                                (j.Notes != null && j.Notes.Contains(searchTerm)))
+                                && !j.IsDeleted)
+                            .Include(j => j.User)
+                            .Include(j => j.CV);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderBy(u => u.UserId)
+            .ThenBy(u => u.ApplicationDate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<JobApplication>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
     }
 }
