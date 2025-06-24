@@ -1,5 +1,5 @@
-using CVTrack.Application.Users.Commands;
 using System.Threading.Tasks;
+using CVTrack.Application.Users.Commands;
 
 namespace CVTrack.Application.Interfaces;
 
@@ -13,4 +13,3 @@ public interface ILoginUserService
     /// </summary>
     Task<string?> LoginAsync(LoginUserCommand command);
 }
-

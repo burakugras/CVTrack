@@ -13,9 +13,7 @@ public class AuditsAdminController : ControllerBase
 {
     private readonly IAdminAuditService _adminAudit;
 
-    public AuditsAdminController(IAdminAuditService adminAudit)
-        => _adminAudit = adminAudit;
-
+    public AuditsAdminController(IAdminAuditService adminAudit) => _adminAudit = adminAudit;
 
     /// GET api/admin/audits?cvId={cvId}&userId={userId}
     [HttpGet("getByUserId")]

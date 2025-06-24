@@ -1,9 +1,9 @@
+using System.Security.Claims;
+using CVTrack.Application.CVs.Queries;
 using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
-using CVTrack.Application.CVs.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace CVTrack.Api.Controllers.Admin;
 
@@ -16,13 +16,16 @@ public class CvsAdminController : ControllerBase
     private readonly IFileService _fileService;
     private readonly IAuditService _auditService;
 
-    public CvsAdminController(IAdminCvService adminCv, IFileService fileService, IAuditService auditService)
+    public CvsAdminController(
+        IAdminCvService adminCv,
+        IFileService fileService,
+        IAuditService auditService
+    )
     {
         _adminCv = adminCv;
         _fileService = fileService;
         _auditService = auditService;
     }
-
 
     // GET api/admin/CvsAdmin
     [HttpGet]
@@ -46,7 +49,7 @@ public class CvsAdminController : ControllerBase
         var cvDto = await _adminCv.GetByIdAsync(id);
         var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
-        await _auditService.LogDownloadAsync(userId,id);
+        await _auditService.LogDownloadAsync(userId, id);
 
         byte[] content;
 
@@ -62,4 +65,3 @@ public class CvsAdminController : ControllerBase
         return File(content, "application/pdf", cvDto.FileName);
     }
 }
-

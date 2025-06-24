@@ -1,6 +1,6 @@
+using CVTrack.Application.DTOs;
 using CVTrack.Application.Users.Commands;
 using CVTrack.Application.Users.Services;
-using CVTrack.Application.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CVTrack.Api.Controllers;

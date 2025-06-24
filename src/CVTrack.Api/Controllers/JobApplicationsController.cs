@@ -1,10 +1,10 @@
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using CVTrack.Application.DTOs;
 using CVTrack.Application.JobApplications.Commands;
 using CVTrack.Application.JobApplications.Services;
-using CVTrack.Application.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace CVTrack.Api.Controllers
 {
@@ -22,8 +22,10 @@ namespace CVTrack.Api.Controllers
 
         // Helper: Token’dan userId al
         private Guid GetUserId() =>
-            Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)
-                       ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!);
+            Guid.Parse(
+                User.FindFirstValue(ClaimTypes.NameIdentifier)
+                    ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!
+            );
 
         // GET: api/jobapplications
         [HttpGet]
@@ -33,13 +35,13 @@ namespace CVTrack.Api.Controllers
             var entities = await _jobService.GetByUserAsync(userId);
             var dtos = entities.Select(j => new JobApplicationDto
             {
-                Id              = j.Id,
-                UserId          = j.UserId,
-                CVId            = j.CVId,
-                CompanyName     = j.CompanyName,
+                Id = j.Id,
+                UserId = j.UserId,
+                CVId = j.CVId,
+                CompanyName = j.CompanyName,
                 ApplicationDate = j.ApplicationDate,
-                Status          = j.Status,
-                Notes           = j.Notes
+                Status = j.Status,
+                Notes = j.Notes,
             });
             return Ok(dtos);
         }
@@ -54,33 +56,35 @@ namespace CVTrack.Api.Controllers
 
             var dto = new JobApplicationDto
             {
-                Id              = entity.Id,
-                UserId          = entity.UserId,
-                CVId            = entity.CVId,
-                CompanyName     = entity.CompanyName,
+                Id = entity.Id,
+                UserId = entity.UserId,
+                CVId = entity.CVId,
+                CompanyName = entity.CompanyName,
                 ApplicationDate = entity.ApplicationDate,
-                Status          = entity.Status,
-                Notes           = entity.Notes
+                Status = entity.Status,
+                Notes = entity.Notes,
             };
             return Ok(dto);
         }
 
         // POST: api/jobapplications
         [HttpPost]
-        public async Task<ActionResult<JobApplicationDto>> Create([FromBody] CreateJobApplicationCommand cmd)
+        public async Task<ActionResult<JobApplicationDto>> Create(
+            [FromBody] CreateJobApplicationCommand cmd
+        )
         {
             cmd.UserId = GetUserId();
             var created = await _jobService.CreateAsync(cmd);
 
             var dto = new JobApplicationDto
             {
-                Id              = created.Id,
-                UserId          = created.UserId,
-                CVId            = created.CVId,
-                CompanyName     = created.CompanyName,
+                Id = created.Id,
+                UserId = created.UserId,
+                CVId = created.CVId,
+                CompanyName = created.CompanyName,
                 ApplicationDate = created.ApplicationDate,
-                Status          = created.Status,
-                Notes           = created.Notes
+                Status = created.Status,
+                Notes = created.Notes,
             };
 
             return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);

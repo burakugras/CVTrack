@@ -16,8 +16,7 @@ namespace CVTrack.Api.Controllers.Admin
     {
         private readonly IAdminUserService _admin;
 
-        public UsersAdminController(IAdminUserService admin)
-            => _admin = admin;
+        public UsersAdminController(IAdminUserService admin) => _admin = admin;
 
         // GET api/admin/users
         /*
@@ -34,7 +33,8 @@ namespace CVTrack.Api.Controllers.Admin
         public async Task<IActionResult> UpdateRole(Guid id, [FromBody] UpdateUserRoleCommand cmd)
         {
             //double entry
-            if (id != cmd.UserId) return BadRequest("URL ve body Id uyuşmuyor.");
+            if (id != cmd.UserId)
+                return BadRequest("URL ve body Id uyuşmuyor.");
             await _admin.UpdateRoleAsync(cmd);
             return NoContent();
         }
@@ -49,17 +49,18 @@ namespace CVTrack.Api.Controllers.Admin
 
         [HttpGet("getall")]
         public async Task<ActionResult<PagedResult<AdminUserDto>>> GetAllUsers(
-           [FromQuery] int pageNumber = 1,
-           [FromQuery] int pageSize = 10,
-           [FromQuery] string? searchTerm = null,
-           [FromQuery] UserRole? role = null)
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? searchTerm = null,
+            [FromQuery] UserRole? role = null
+        )
         {
             var query = new GetAllUsersQuery
             {
                 PageNumber = pageNumber,
                 PageSize = pageSize,
                 SearchTerm = searchTerm,
-                Role = role
+                Role = role,
             };
 
             var result = await _admin.GetAllPagedAsync(query);
@@ -84,7 +85,10 @@ namespace CVTrack.Api.Controllers.Admin
             Response.Headers.Append("X-Pagination-TotalPages", pagedResult.TotalPages.ToString());
             Response.Headers.Append("X-Pagination-CurrentPage", pagedResult.PageNumber.ToString());
             Response.Headers.Append("X-Pagination-HasNext", pagedResult.HasNextPage.ToString());
-            Response.Headers.Append("X-Pagination-HasPrevious", pagedResult.HasPreviousPage.ToString());
+            Response.Headers.Append(
+                "X-Pagination-HasPrevious",
+                pagedResult.HasPreviousPage.ToString()
+            );
         }
     }
 }

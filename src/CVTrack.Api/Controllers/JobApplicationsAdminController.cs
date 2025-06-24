@@ -16,8 +16,7 @@ public class JobApplicationsAdminController : ControllerBase
 {
     private readonly IAdminJobApplicationService _admin;
 
-    public JobApplicationsAdminController(IAdminJobApplicationService admin)
-        => _admin = admin;
+    public JobApplicationsAdminController(IAdminJobApplicationService admin) => _admin = admin;
 
     // GET api/admin/JobApplicationsAdmin
     /*
@@ -31,17 +30,18 @@ public class JobApplicationsAdminController : ControllerBase
 
     [HttpGet("getall")]
     public async Task<ActionResult<PagedResult<AdminJobApplicationDto>>> GetAll(
-           [FromQuery] int pageNumber = 1,
-           [FromQuery] int pageSize = 10,
-           [FromQuery] string? searchTerm = null,
-           [FromQuery] ApplicationStatus? status = null)
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? searchTerm = null,
+        [FromQuery] ApplicationStatus? status = null
+    )
     {
         var query = new GetAllJobApplicationsQuery
         {
             PageNumber = pageNumber,
             PageSize = pageSize,
             SearchTerm = searchTerm,
-            Status = status
+            Status = status,
         };
 
         var result = await _admin.GetAllPagedAsync(query);
@@ -55,7 +55,9 @@ public class JobApplicationsAdminController : ControllerBase
     [HttpGet("active")]
     public async Task<IActionResult> GetActiveJobApplicationsForAdmin()
     {
-        var jobApplications = await _admin.GetAllActiveJobApplications(new GetAllJobApplicationsQuery());
+        var jobApplications = await _admin.GetAllActiveJobApplications(
+            new GetAllJobApplicationsQuery()
+        );
         return Ok(jobApplications);
     }
 
@@ -63,9 +65,11 @@ public class JobApplicationsAdminController : ControllerBase
     [HttpPut("{id}/status")]
     public async Task<IActionResult> UpdateStatus(
         Guid id,
-        [FromBody] UpdateJobApplicationStatusCommand cmd)
+        [FromBody] UpdateJobApplicationStatusCommand cmd
+    )
     {
-        if (id != cmd.Id) return BadRequest("URL ve body Id uyuşmuyor.");
+        if (id != cmd.Id)
+            return BadRequest("URL ve body Id uyuşmuyor.");
         await _admin.UpdateStatusAsync(cmd);
         return NoContent();
     }
@@ -87,4 +91,3 @@ public class JobApplicationsAdminController : ControllerBase
         Response.Headers.Append("X-Pagination-HasPrevious", pagedResult.HasPreviousPage.ToString());
     }
 }
-
