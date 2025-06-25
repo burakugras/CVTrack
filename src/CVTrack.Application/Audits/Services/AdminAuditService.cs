@@ -1,10 +1,10 @@
+using CVTrack.Application.Audits.Queries;
 using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
-using CVTrack.Application.Audits.Queries;
-using CVTrack.Domain.Entities;
 using CVTrack.Domain.Common;
+using CVTrack.Domain.Entities;
 
-namespace CVTrack.Application.Services;
+namespace CVTrack.Application.Audits.Services;
 
 public class AdminAuditService : IAdminAuditService
 {

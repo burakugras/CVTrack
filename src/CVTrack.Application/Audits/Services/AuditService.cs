@@ -1,10 +1,8 @@
-using System;
-using System.Threading.Tasks;
 using CVTrack.Application.Interfaces;
 using CVTrack.Domain.Entities;
 using Microsoft.Extensions.Logging;
 
-namespace CVTrack.Application.Services;
+namespace CVTrack.Application.Audits.Services;
 
 public class AuditService : IAuditService
 {

@@ -33,7 +33,7 @@ public class UsersAdminControllerTests
             .ReturnsAsync(dtos);
 
         // Act
-        var result = await _controller.GetAll();
+        var result = await _controller.GetAllUsers();
 
         // Assert
         var ok = result.Result as OkObjectResult;
