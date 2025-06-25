@@ -2,6 +2,7 @@ using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
 using CVTrack.Application.Audits.Queries;
 using CVTrack.Domain.Entities;
+using CVTrack.Domain.Common;
 
 namespace CVTrack.Application.Services;
 
@@ -29,6 +30,72 @@ public class AdminAuditService : IAdminAuditService
                 Timestamp = a.Timestamp
             });
         return list;
+    }
+
+    public async Task<PagedResult<AuditDto>> GetAllPagedAsync(GetAllAuditsQuery query)
+    {
+        var pagination = new PaginationRequest
+        {
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize
+        };
+
+        PagedResult<Audit> pagedAudits;
+
+        if (query.UserId.HasValue)
+        {
+            pagedAudits = await _auditRepo.GetAuditsByUserPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize,
+                query.UserId.Value
+            );
+        }
+        // Search varsa
+        else if (!string.IsNullOrEmpty(query.SearchTerm))
+        {
+            pagedAudits = await _auditRepo.SearchAuditsPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize,
+                query.SearchTerm
+            );
+        }
+        // Role filter varsa
+        else if (query.Action.HasValue)
+        {
+            pagedAudits = await _auditRepo.GetAuditsByActionPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize,
+                query.Action.Value
+            );
+        }
+
+        // Normal pagination
+        else
+        {
+            pagedAudits = await _auditRepo.GetPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize
+            );
+        }
+        // User'ları AdminUserDto'ya dönüştür
+        var adminAuditDtos = pagedAudits.Items.Select(u => new AuditDto
+        {
+            Id = u.Id,
+            FirstName = u.FirstName,
+            LastName = u.LastName,
+            UserId = u.UserId,
+            CvId = u.CvId,
+            Timestamp = u.Timestamp,
+            Action = u.Action.ToString()
+        });
+
+        return new PagedResult<AuditDto>
+        {
+            Items = adminAuditDtos,
+            TotalCount = pagedAudits.TotalCount,
+            PageNumber = pagedAudits.PageNumber,
+            PageSize = pagedAudits.PageSize
+        };
     }
 
     // public async Task<IEnumerable<AuditDto>> GetAllAuditsAsync()
