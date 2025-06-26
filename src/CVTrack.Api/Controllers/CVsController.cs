@@ -10,6 +10,7 @@ using CVTrack.Application.CVs.Queries;
 using CVTrack.Application.CVs.Services;
 using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
+using CVTrack.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,16 +32,28 @@ public class CvsController : ControllerBase
         _auditService = auditService;
     }
 
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<CVDto>>> GetByUser()
+    [HttpGet("getByUser")]
+    public async Task<ActionResult<PagedResult<CVDto>>> GetByUser(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? searchTerm = null)
     {
         var userId = Guid.Parse(
             User.FindFirstValue(ClaimTypes.NameIdentifier)
-                ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!
+            ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!
         );
 
-        var cvs = await _cvService.GetByUserAsync(new GetCvsByUserQuery { UserId = userId });
-        return Ok(cvs);
+        var q = new GetAllCvsQuery
+        {
+            UserId = userId,
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            SearchTerm = searchTerm
+        };
+
+        var result = await _cvService.GetAllPagedAsync(q);
+        AddPaginationHeaders(result);
+        return Ok(result);
     }
 
     // POST /api/cvs
@@ -114,5 +127,14 @@ public class CvsController : ControllerBase
         }
 
         return File(content, "application/pdf", cvDto.FileName);
+    }
+
+    private void AddPaginationHeaders<T>(PagedResult<T> paged)
+    {
+        Response.Headers.Append("X-Pagination-TotalCount", paged.TotalCount.ToString());
+        Response.Headers.Append("X-Pagination-TotalPages", ((paged.TotalCount + paged.PageSize - 1) / paged.PageSize).ToString());
+        Response.Headers.Append("X-Pagination-CurrentPage", paged.PageNumber.ToString());
+        Response.Headers.Append("X-Pagination-HasNext", paged.HasNextPage.ToString());
+        Response.Headers.Append("X-Pagination-HasPrevious", paged.HasPreviousPage.ToString());
     }
 }

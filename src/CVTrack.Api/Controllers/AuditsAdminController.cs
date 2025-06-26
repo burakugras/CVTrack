@@ -66,9 +66,7 @@ public class AuditsAdminController : ControllerBase
         Response.Headers.Append("X-Pagination-TotalPages", pagedResult.TotalPages.ToString());
         Response.Headers.Append("X-Pagination-CurrentPage", pagedResult.PageNumber.ToString());
         Response.Headers.Append("X-Pagination-HasNext", pagedResult.HasNextPage.ToString());
-        Response.Headers.Append(
-            "X-Pagination-HasPrevious",
-            pagedResult.HasPreviousPage.ToString()
+        Response.Headers.Append("X-Pagination-HasPrevious", pagedResult.HasPreviousPage.ToString()
         );
     }
 }

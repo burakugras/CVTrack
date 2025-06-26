@@ -6,6 +6,8 @@ using CVTrack.Application.Users.Queries;
 using CVTrack.Application.Users.Commands;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using CVTrack.Domain.Common;
 
 namespace CVTrack.UnitTests.ControllerTests;
 
@@ -18,19 +20,33 @@ public class UsersAdminControllerTests
     public UsersAdminControllerTests()
     {
         _adminServiceMock = new Mock<IAdminUserService>();
-        _controller = new UsersAdminController(_adminServiceMock.Object);
+        _controller = new UsersAdminController(_adminServiceMock.Object)
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
     }
 
     [Fact]
-    public async Task GetAll_ReturnsOk_With_AdminUserDtoList()
+    public async Task GetAllUsers_ReturnsOk_With_Paged_AdminUserDtoList()
     {
         // Arrange
-        var dtos = new List<AdminUserDto> {
-                new() { Id = Guid.NewGuid(), FirstName="A", LastName="B", Email="a@b.com", Role="User" }
+        var dtos = new List<AdminUserDto>
+            {
+                new() { Id = Guid.NewGuid(), FirstName = "A", LastName = "B", Email = "a@b.com", Role = "User" }
             };
+        var paged = new PagedResult<AdminUserDto>
+        {
+            Items = dtos,
+            TotalCount = dtos.Count,
+            PageNumber = 1,
+            PageSize = 10
+        };
         _adminServiceMock
-            .Setup(s => s.GetAllAsync(It.IsAny<GetAllUsersQuery>()))
-            .ReturnsAsync(dtos);
+            .Setup(s => s.GetAllPagedAsync(It.IsAny<GetAllUsersQuery>()))
+            .ReturnsAsync(paged);
 
         // Act
         var result = await _controller.GetAllUsers();
@@ -38,9 +54,11 @@ public class UsersAdminControllerTests
         // Assert
         var ok = result.Result as OkObjectResult;
         ok.Should().NotBeNull();
-        ok!.Value.Should().BeAssignableTo<IEnumerable<AdminUserDto>>()
-           .Which.Should().HaveCount(1)
-                    .And.ContainSingle(d => d.Email == "a@b.com");
+        var body = ok!.Value as PagedResult<AdminUserDto>;
+        body.Should().NotBeNull();
+        body!.Items
+            .Should().HaveCount(1)
+            .And.ContainSingle(u => u.Email == "a@b.com");
     }
 
     [Fact]

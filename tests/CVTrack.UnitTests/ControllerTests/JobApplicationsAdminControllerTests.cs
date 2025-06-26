@@ -3,8 +3,10 @@ using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
 using CVTrack.Application.JobApplications.Commands;
 using CVTrack.Application.JobApplications.Queries;
+using CVTrack.Domain.Common;
 using CVTrack.Domain.Entities;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
@@ -18,19 +20,33 @@ public class JobApplicationsAdminControllerTests
     public JobApplicationsAdminControllerTests()
     {
         _adminServiceMock = new Mock<IAdminJobApplicationService>();
-        _controller = new JobApplicationsAdminController(_adminServiceMock.Object);
+        _controller = new JobApplicationsAdminController(_adminServiceMock.Object)
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
     }
 
     [Fact]
-    public async Task GetAll_ReturnsOk_With_List()
+    public async Task GetAll_ReturnsOk_With_Paged_AdminJobApplicationDtoList()
     {
         // Arrange
-        var list = new List<AdminJobApplicationDto> {
+        var list = new List<AdminJobApplicationDto>
+            {
                 new() { Id = Guid.NewGuid(), CompanyName = "X" }
             };
+        var paged = new PagedResult<AdminJobApplicationDto>
+        {
+            Items = list,
+            TotalCount = list.Count,
+            PageNumber = 1,
+            PageSize = 10
+        };
         _adminServiceMock
-            .Setup(s => s.GetAllAsync(It.IsAny<GetAllJobApplicationsQuery>()))
-            .ReturnsAsync(list);
+            .Setup(s => s.GetAllPagedAsync(It.IsAny<GetAllJobApplicationsQuery>()))
+            .ReturnsAsync(paged);
 
         // Act
         var result = await _controller.GetAll();
@@ -38,8 +54,9 @@ public class JobApplicationsAdminControllerTests
         // Assert
         var ok = result.Result as OkObjectResult;
         ok.Should().NotBeNull();
-        ok!.Value.Should().NotBeNull();
-        ((IEnumerable<AdminJobApplicationDto>)ok.Value)
+        var body = ok!.Value as PagedResult<AdminJobApplicationDto>;
+        body.Should().NotBeNull();
+        body!.Items
             .Should().ContainSingle(d => d.CompanyName == "X");
     }
 
@@ -47,7 +64,11 @@ public class JobApplicationsAdminControllerTests
     public async Task UpdateStatus_IdMismatch_ReturnsBadRequest()
     {
         // Arrange
-        var cmd = new UpdateJobApplicationStatusCommand { Id = Guid.NewGuid(), Status = ApplicationStatus.Pending };
+        var cmd = new UpdateJobApplicationStatusCommand
+        {
+            Id = Guid.NewGuid(),
+            Status = ApplicationStatus.Pending
+        };
         var wrongId = Guid.NewGuid();
 
         // Act
