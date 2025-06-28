@@ -1,3 +1,5 @@
+using CVTrack.Domain.Entities;
+
 namespace CVTrack.Application.CVs.Queries;
 
 public class GetAllCvsQuery

@@ -2,7 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using CVTrack.Application.DTOs;
 using CVTrack.Application.JobApplications.Commands;
+using CVTrack.Application.JobApplications.Queries;
 using CVTrack.Application.JobApplications.Services;
+using CVTrack.Domain.Common;
+using CVTrack.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,21 +32,27 @@ namespace CVTrack.Api.Controllers
 
         // GET: api/jobapplications
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<JobApplicationDto>>> GetByUser()
+        public async Task<ActionResult<PagedResult<JobApplicationDto>>> GetByUser(
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10,
+            [FromQuery] string? searchTerm = null,
+            [FromQuery] ApplicationStatus? status = null)
         {
             var userId = GetUserId();
-            var entities = await _jobService.GetByUserAsync(userId);
-            var dtos = entities.Select(j => new JobApplicationDto
+            var jobApplication = new GetAllJobApplicationsQuery
             {
-                Id = j.Id,
-                UserId = j.UserId,
-                CVId = j.CVId,
-                CompanyName = j.CompanyName,
-                ApplicationDate = j.ApplicationDate,
-                Status = j.Status,
-                Notes = j.Notes,
-            });
-            return Ok(dtos);
+                UserId = userId,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                SearchTerm = searchTerm,
+                Status = status
+
+            };
+
+            var result = await _jobService.GetAllPagedAsync(jobApplication);
+            AddPaginationHeaders(result);
+
+            return Ok(result);
         }
 
         // GET: api/jobapplications/{id}
@@ -108,6 +117,15 @@ namespace CVTrack.Api.Controllers
         {
             await _jobService.DeleteAsync(id);
             return NoContent();
+        }
+
+        private void AddPaginationHeaders<T>(PagedResult<T> paged)
+        {
+            Response.Headers.Append("X-Pagination-TotalCount", paged.TotalCount.ToString());
+            Response.Headers.Append("X-Pagination-TotalPages", ((paged.TotalCount + paged.PageSize - 1) / paged.PageSize).ToString());
+            Response.Headers.Append("X-Pagination-CurrentPage", paged.PageNumber.ToString());
+            Response.Headers.Append("X-Pagination-HasNext", paged.HasNextPage.ToString());
+            Response.Headers.Append("X-Pagination-HasPrevious", paged.HasPreviousPage.ToString());
         }
     }
 }

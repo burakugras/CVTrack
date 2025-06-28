@@ -9,24 +9,19 @@ namespace CVTrack.Persistence.Repositories;
 public class JobApplicationRepository : IJobApplicationRepository
 {
     private readonly AppDbContext _context;
+
     public JobApplicationRepository(AppDbContext context)
     {
         _context = context;
     }
-    public async Task<JobApplication> GetByIdAsync(Guid id)
+
+    public async Task<JobApplication?> GetByIdAsync(Guid id)
     {
-        var jobApplication = await _context.JobApplications
+        return await _context.JobApplications
             .Where(j => j.Id == id && !j.IsDeleted)
             .Include(j => j.User)
             .Include(j => j.CV)
-            .FirstOrDefaultAsync(j => j.Id == id);
-
-        if (jobApplication == null)
-        {
-            throw new InvalidOperationException($"JobApplication with ID {id} not found.");
-        }
-
-        return jobApplication;
+            .FirstOrDefaultAsync();
     }
 
     public async Task<IEnumerable<JobApplication>> GetByUserIdAsync(Guid userId)
@@ -59,32 +54,51 @@ public class JobApplicationRepository : IJobApplicationRepository
     public async Task<IEnumerable<JobApplication>> GetAllAsync()
     {
         return await _context.JobApplications
-                             .Include(j => j.CV)
-                             .Include(j => j.User)
-                             .ToListAsync();
+            .Include(j => j.CV)
+            .Include(j => j.User)
+            .ToListAsync();
     }
 
     public async Task<IEnumerable<JobApplication>> GetAllActiveJobApplicationsAsync()
     {
         return await _context.JobApplications
-                             .Where(j => !j.IsDeleted)
-                             .Include(j => j.User)
-                             .Include(j => j.CV)
-                             .ToListAsync();
+            .Where(j => !j.IsDeleted)
+            .Include(j => j.User)
+            .Include(j => j.CV)
+            .ToListAsync();
     }
 
-    public async Task<PagedResult<JobApplication>> GetPagedAsync(int pageNumber, int pageSize)
+    // Kullanıcının kendi başvuruları için filtreleme (searchTerm ve status birlikte çalışabilir)
+    public async Task<PagedResult<JobApplication>> GetJobApplicationsByUserFilteredPagedAsync(
+        int pageNumber,
+        int pageSize,
+        Guid userId,
+        string? searchTerm = null,
+        ApplicationStatus? status = null)
     {
         var query = _context.JobApplications
-                            .Where(j => !j.IsDeleted)
-                            .Include(j => j.User)
-                            .Include(j => j.CV);
+            .Where(j => j.UserId == userId && !j.IsDeleted);
+
+        // SearchTerm filtresi
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(j =>
+                j.CompanyName.Contains(searchTerm) ||
+                (j.Notes != null && j.Notes.Contains(searchTerm)));
+        }
+
+        // Status filtresi
+        if (status.HasValue)
+        {
+            query = query.Where(j => j.Status == status.Value);
+        }
+
+        query = query.Include(j => j.User).Include(j => j.CV);
 
         var totalCount = await query.CountAsync();
 
         var items = await query
-            .OrderBy(u => u.UserId)
-            .ThenBy(u => u.ApplicationDate)
+            .OrderByDescending(j => j.ApplicationDate)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
@@ -96,58 +110,71 @@ public class JobApplicationRepository : IJobApplicationRepository
             PageNumber = pageNumber,
             PageSize = pageSize
         };
+    }
+
+    // Tüm başvurular için filtreleme (admin kullanımı için)
+    public async Task<PagedResult<JobApplication>> GetJobApplicationsFilteredPagedAsync(
+        int pageNumber,
+        int pageSize,
+        string? searchTerm = null,
+        ApplicationStatus? status = null)
+    {
+        var query = _context.JobApplications
+            .Where(j => !j.IsDeleted);
+
+        // SearchTerm filtresi
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(j =>
+                j.CompanyName.Contains(searchTerm) ||
+                (j.Notes != null && j.Notes.Contains(searchTerm)));
+        }
+
+        // Status filtresi
+        if (status.HasValue)
+        {
+            query = query.Where(j => j.Status == status.Value);
+        }
+
+        query = query
+            .Include(j => j.User)
+            .Include(j => j.CV);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(j => j.ApplicationDate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<JobApplication>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+
+    // Eski metodlar - geriye dönük uyumluluk için tutuyorum ama artık kullanılmayacak
+    public async Task<PagedResult<JobApplication>> GetPagedAsync(int pageNumber, int pageSize)
+    {
+        return await GetJobApplicationsFilteredPagedAsync(pageNumber, pageSize);
     }
 
     public async Task<PagedResult<JobApplication>> GetJobApplicationsByStatusPagedAsync(int pageNumber, int pageSize, ApplicationStatus status)
     {
-        var query = _context.JobApplications
-                            .Where(j => j.Status == status && !j.IsDeleted)
-                            .Include(j => j.User)
-                            .Include(j => j.CV);
-
-        var totalCount = await query.CountAsync();
-
-        var items = await query
-            .OrderBy(u => u.UserId)
-            .ThenBy(u => u.ApplicationDate)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return new PagedResult<JobApplication>
-        {
-            Items = items,
-            TotalCount = totalCount,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        };
+        return await GetJobApplicationsFilteredPagedAsync(pageNumber, pageSize, null, status);
     }
 
     public async Task<PagedResult<JobApplication>> SearchJobApplicationsPagedAsync(int pageNumber, int pageSize, string searchTerm)
     {
-        var query = _context.JobApplications
-                            .Where(j =>
-                                (j.CompanyName.Contains(searchTerm) ||
-                                (j.Notes != null && j.Notes.Contains(searchTerm)))
-                                && !j.IsDeleted)
-                            .Include(j => j.User)
-                            .Include(j => j.CV);
+        return await GetJobApplicationsFilteredPagedAsync(pageNumber, pageSize, searchTerm);
+    }
 
-        var totalCount = await query.CountAsync();
-
-        var items = await query
-            .OrderBy(u => u.UserId)
-            .ThenBy(u => u.ApplicationDate)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return new PagedResult<JobApplication>
-        {
-            Items = items,
-            TotalCount = totalCount,
-            PageNumber = pageNumber,
-            PageSize = pageSize
-        };
+    public async Task<PagedResult<JobApplication>> GetJobApplicationsByUserPagedAsync(int pageNumber, int pageSize, Guid userId)
+    {
+        return await GetJobApplicationsByUserFilteredPagedAsync(pageNumber, pageSize, userId);
     }
 }

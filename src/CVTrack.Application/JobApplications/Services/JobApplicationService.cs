@@ -1,10 +1,13 @@
+using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
 using CVTrack.Application.JobApplications.Commands;
+using CVTrack.Application.JobApplications.Queries;
+using CVTrack.Domain.Common;
 using CVTrack.Domain.Entities;
 
 namespace CVTrack.Application.JobApplications.Services;
 
-public class JobApplicationService
+public class JobApplicationService : IJobApplicationService
 {
     private readonly IJobApplicationRepository _jobRepo;
 
@@ -56,4 +59,57 @@ public class JobApplicationService
 
     public async Task<JobApplication?> GetByIdAsync(Guid id)
         => await _jobRepo.GetByIdAsync(id);
+
+    public async Task<PagedResult<JobApplicationDto>> GetAllPagedAsync(GetAllJobApplicationsQuery query)
+    {
+        var pagination = new PaginationRequest
+        {
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize
+        };
+
+        PagedResult<JobApplication> pagedJobApplications;
+
+        // UserId varsa (kullanıcının kendi başvurularını getiriyor)
+        if (query.UserId.HasValue)
+        {
+            pagedJobApplications = await _jobRepo.GetJobApplicationsByUserFilteredPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize,
+                query.UserId.Value,
+                query.SearchTerm,
+                query.Status
+            );
+        }
+        else
+        {
+            // Admin için tüm başvuruları getir (bu durumda muhtemelen hiç olmayacak ama güvenlik için)
+            pagedJobApplications = await _jobRepo.GetJobApplicationsFilteredPagedAsync(
+                pagination.ValidatedPageNumber,
+                pagination.ValidatedPageSize,
+                query.SearchTerm,
+                query.Status
+            );
+        }
+
+        // JobApplication'ları DTO'ya dönüştür
+        var jobApplicationDtos = pagedJobApplications.Items.Select(u => new JobApplicationDto
+        {
+            Id = u.Id,
+            UserId = u.UserId,
+            CVId = u.CVId,
+            CompanyName = u.CompanyName,
+            ApplicationDate = u.ApplicationDate,
+            Status = u.Status,
+            Notes = u.Notes
+        });
+
+        return new PagedResult<JobApplicationDto>
+        {
+            Items = jobApplicationDtos,
+            TotalCount = pagedJobApplications.TotalCount,
+            PageNumber = pagedJobApplications.PageNumber,
+            PageSize = pagedJobApplications.PageSize
+        };
+    }
 }
