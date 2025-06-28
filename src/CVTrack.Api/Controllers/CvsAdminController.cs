@@ -2,8 +2,10 @@ using System.Security.Claims;
 using CVTrack.Application.CVs.Queries;
 using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
+using CVTrack.Domain.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace CVTrack.Api.Controllers.Admin;
 
@@ -29,10 +31,25 @@ public class CvsAdminController : ControllerBase
 
     // GET api/admin/CvsAdmin
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AdminCvDto>>> GetAll()
+    public async Task<ActionResult<PagedResult<AdminCvDto>>> GetAll(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? searchTerm = null
+    )
     {
-        var list = await _adminCv.GetAllAsync(new GetAllCvsQuery());
-        return Ok(list);
+        var query = new GetAllCvsQuery
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            SearchTerm = searchTerm
+        };
+
+        var result = await _adminCv.GetAllPagedAsync(query);
+
+        AddPaginationHeaders(result);
+
+        return Ok(result);
+
     }
 
     // DELETE api/admin/CvsAdmin/{id}
@@ -63,5 +80,14 @@ public class CvsAdminController : ControllerBase
         }
 
         return File(content, "application/pdf", cvDto.FileName);
+    }
+
+    private void AddPaginationHeaders<T>(PagedResult<T> pagedResult)
+    {
+        Response.Headers.Append("X-Pagination-TotalCount", pagedResult.TotalCount.ToString());
+        Response.Headers.Append("X-Pagination-TotalPages", pagedResult.TotalPages.ToString());
+        Response.Headers.Append("X-Pagination-CurrentPage", pagedResult.PageNumber.ToString());
+        Response.Headers.Append("X-Pagination-HasNext", pagedResult.HasNextPage.ToString());
+        Response.Headers.Append("X-Pagination-HasPrevious", pagedResult.HasPreviousPage.ToString());
     }
 }

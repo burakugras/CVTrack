@@ -3,6 +3,7 @@ using CVTrack.Api.Controllers.Admin;
 using CVTrack.Application.CVs.Queries;
 using CVTrack.Application.DTOs;
 using CVTrack.Application.Interfaces;
+using CVTrack.Domain.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -40,25 +41,38 @@ public class CvsAdminControllerTests
     }
 
     [Fact]
-    public async Task GetAll_ReturnsOk_With_List()
+    public async Task GetAll_ReturnsOk_With_PagedList()
     {
         // Arrange
-        var list = new List<AdminCvDto> {
-                new() { Id = Guid.NewGuid(), FileName = "a.pdf" }
-            };
+        var dtoList = new List<AdminCvDto> {
+        new() { Id = Guid.NewGuid(), FileName = "a.pdf" }
+    };
+        var pagedResult = new PagedResult<AdminCvDto>
+        {
+            Items = dtoList,
+            TotalCount = dtoList.Count,
+            PageNumber = 1,
+            PageSize = 10
+        };
         _cvServiceMock
-            .Setup(s => s.GetAllAsync(It.IsAny<GetAllCvsQuery>()))
-            .ReturnsAsync(list);
+            .Setup(s => s.GetAllPagedAsync(It.IsAny<GetAllCvsQuery>()))
+            .ReturnsAsync(pagedResult);
 
         // Act
-        var result = await _controller.GetAll();
+        var actionResult = await _controller.GetAll();
 
         // Assert
-        var ok = result.Result as OkObjectResult;
+        var ok = actionResult.Result as OkObjectResult;
         ok.Should().NotBeNull();
-        (ok!.Value as IEnumerable<AdminCvDto>)
-            .Should().NotBeNull()
-            .And.ContainSingle(d => d.FileName == "a.pdf");
+
+        var returned = ok!.Value as PagedResult<AdminCvDto>;
+        returned.Should().NotBeNull();
+        returned!.Items
+            .Should().HaveCount(1)
+            .And.ContainSingle(c => c.FileName == "a.pdf");
+        returned.TotalCount.Should().Be(1);
+        returned.PageNumber.Should().Be(1);
+        returned.PageSize.Should().Be(10);
     }
 
     [Fact]
