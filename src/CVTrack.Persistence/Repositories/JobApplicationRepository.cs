@@ -51,21 +51,104 @@ public class JobApplicationRepository : IJobApplicationRepository
         await _context.SaveChangesAsync();
     }
 
+    // tüm verileri getir (soft delete durumu fark etmeksizin)
     public async Task<IEnumerable<JobApplication>> GetAllAsync()
     {
         return await _context.JobApplications
             .Include(j => j.CV)
             .Include(j => j.User)
-            .ToListAsync();
+            .ToListAsync(); // IsDeleted filtresi YOK
     }
 
-    public async Task<IEnumerable<JobApplication>> GetAllActiveJobApplicationsAsync()
+    // sadece aktif verileri getir (IsDeleted = false)
+    public async Task<PagedResult<JobApplication>> GetAllActiveJobApplicationsAsync(
+        int pageNumber,
+        int pageSize,
+        string? searchTerm = null,
+        ApplicationStatus? status = null)
     {
-        return await _context.JobApplications
-            .Where(j => !j.IsDeleted)
+        var query = _context.JobApplications
+            .Where(j => !j.IsDeleted) // Soft delete filtresi 
+            .AsQueryable();
+
+        // SearchTerm filtresi
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(j =>
+                j.CompanyName.Contains(searchTerm) ||
+                (j.Notes != null && j.Notes.Contains(searchTerm)));
+        }
+
+        // Status filtresi
+        if (status.HasValue)
+        {
+            query = query.Where(j => j.Status == status.Value);
+        }
+
+        query = query
             .Include(j => j.User)
-            .Include(j => j.CV)
+            .Include(j => j.CV);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(j => j.ApplicationDate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+
+        return new PagedResult<JobApplication>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
+    }
+
+    // tüm verileri getir - sayfalanmış (soft delete durumu fark etmeksizin)
+    public async Task<PagedResult<JobApplication>> GetAllJobApplicationsPagedAsync(
+        int pageNumber,
+        int pageSize,
+        string? searchTerm = null,
+        ApplicationStatus? status = null)
+    {
+        var query = _context.JobApplications
+            .AsQueryable(); // IsDeleted filtresi yok yani herşey geliyor
+
+        // SearchTerm filtresi
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(j =>
+                j.CompanyName.Contains(searchTerm) ||
+                (j.Notes != null && j.Notes.Contains(searchTerm)));
+        }
+
+        // Status filtresi
+        if (status.HasValue)
+        {
+            query = query.Where(j => j.Status == status.Value);
+        }
+
+        query = query
+            .Include(j => j.User)
+            .Include(j => j.CV);
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(j => j.ApplicationDate)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new PagedResult<JobApplication>
+        {
+            Items = items,
+            TotalCount = totalCount,
+            PageNumber = pageNumber,
+            PageSize = pageSize
+        };
     }
 
     // Kullanıcının kendi başvuruları için filtreleme (searchTerm ve status birlikte çalışabilir)
@@ -112,7 +195,7 @@ public class JobApplicationRepository : IJobApplicationRepository
         };
     }
 
-    // Tüm başvurular için filtreleme (admin kullanımı için)
+    // aktif veriler için filtreleme (admin kullanımı için)
     public async Task<PagedResult<JobApplication>> GetJobApplicationsFilteredPagedAsync(
         int pageNumber,
         int pageSize,
@@ -120,7 +203,7 @@ public class JobApplicationRepository : IJobApplicationRepository
         ApplicationStatus? status = null)
     {
         var query = _context.JobApplications
-            .Where(j => !j.IsDeleted);
+            .Where(j => !j.IsDeleted); // Soft delete filtresi
 
         // SearchTerm filtresi
         if (!string.IsNullOrEmpty(searchTerm))
@@ -157,7 +240,7 @@ public class JobApplicationRepository : IJobApplicationRepository
         };
     }
 
-    // Eski metodlar - geriye dönük uyumluluk için tutuyorum ama artık kullanılmayacak
+    // eski metodlar - geriye dönük uyumluluk için tutuyorum ama artık kullanılmayacak
     public async Task<PagedResult<JobApplication>> GetPagedAsync(int pageNumber, int pageSize)
     {
         return await GetJobApplicationsFilteredPagedAsync(pageNumber, pageSize);

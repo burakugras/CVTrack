@@ -28,7 +28,7 @@ public class JobApplicationsAdminController : ControllerBase
     }
     */
 
-    [HttpGet("getall")]
+    [HttpGet("getAll")]
     public async Task<ActionResult<PagedResult<AdminJobApplicationDto>>> GetAll(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
@@ -52,13 +52,27 @@ public class JobApplicationsAdminController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("active")]
-    public async Task<IActionResult> GetActiveJobApplicationsForAdmin()
+    [HttpGet("getAllActive")]
+    public async Task<ActionResult<PagedResult<AdminJobApplicationDto>>> GetActiveJobApplicationsForAdmin(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string? searchTerm = null,
+        [FromQuery] ApplicationStatus? status = null
+    )
     {
-        var jobApplications = await _admin.GetAllActiveJobApplications(
-            new GetAllJobApplicationsQuery()
-        );
-        return Ok(jobApplications);
+        var query = new GetAllJobApplicationsQuery
+        {
+            PageNumber = pageNumber,
+            PageSize = pageSize,
+            SearchTerm = searchTerm,
+            Status = status
+        };
+
+        var result = await _admin.GetAllActivePagedJobApplications(query);
+
+        AddPaginationHeaders(result);
+
+        return Ok(result);
     }
 
     // PUT api/admin/JobApplicationsAdmin/{id}/status

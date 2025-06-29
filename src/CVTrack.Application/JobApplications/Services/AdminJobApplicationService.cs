@@ -18,6 +18,7 @@ public class AdminJobApplicationService : IAdminJobApplicationService
     public AdminJobApplicationService(IJobApplicationRepository repo)
         => _repo = repo;
 
+    // tüm verileri getir (soft delete durumu fark etmeksizin)
     public async Task<IEnumerable<AdminJobApplicationDto>> GetAllAsync(GetAllJobApplicationsQuery _)
     {
         var apps = await _repo.GetAllAsync();
@@ -56,24 +57,47 @@ public class AdminJobApplicationService : IAdminJobApplicationService
         await _repo.UpdateAsync(j);
     }
 
-    public async Task<IEnumerable<AdminJobApplicationDto>> GetAllActiveJobApplications(GetAllJobApplicationsQuery _)
+    // sadece aktif verileri getir (IsDeleted = false) - sayfalanmış
+    public async Task<PagedResult<AdminJobApplicationDto>> GetAllActivePagedJobApplications(GetAllJobApplicationsQuery query)
     {
-        var apps = await _repo.GetAllActiveJobApplicationsAsync();
-        return apps.Select(j => new AdminJobApplicationDto
+        var pagination = new PaginationRequest
         {
-            Id = j.Id,
-            UserId = j.UserId,
-            UserFirstName = j.User?.FirstName ?? string.Empty,
-            UserLastName = j.User?.LastName ?? string.Empty,
-            UserMail = j.User?.Email ?? string.Empty,
-            CVId = j.CVId,
-            CompanyName = j.CompanyName,
-            ApplicationDate = j.ApplicationDate,
-            Status = j.Status,
-            Notes = j.Notes
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize
+        };
+
+        // Bu metod sadece aktif (soft delete edilmemiş) verileri getirecek
+        var pagedJobApplications = await _repo.GetAllActiveJobApplicationsAsync(
+            pagination.ValidatedPageNumber,
+            pagination.ValidatedPageSize,
+            query.SearchTerm,
+            query.Status
+        );
+
+        var adminActiveJobApplications = pagedJobApplications.Items.Select(u => new AdminJobApplicationDto
+        {
+            Id = u.Id,
+            CVId = u.CVId,
+            UserId = u.UserId,
+            UserFirstName = u.User?.FirstName ?? string.Empty,
+            UserLastName = u.User?.LastName ?? string.Empty,
+            UserMail = u.User?.Email ?? string.Empty,
+            CompanyName = u.CompanyName,
+            ApplicationDate = u.ApplicationDate,
+            Status = u.Status,
+            Notes = u.Notes
         });
+
+        return new PagedResult<AdminJobApplicationDto>
+        {
+            Items = adminActiveJobApplications,
+            TotalCount = pagedJobApplications.TotalCount,
+            PageNumber = pagedJobApplications.PageNumber,
+            PageSize = pagedJobApplications.PageSize
+        };
     }
 
+    // tüm verileri getir (soft delete durumu fark etmeksizin) - sayfalanmış
     public async Task<PagedResult<AdminJobApplicationDto>> GetAllPagedAsync(GetAllJobApplicationsQuery query)
     {
         var pagination = new PaginationRequest
@@ -82,36 +106,15 @@ public class AdminJobApplicationService : IAdminJobApplicationService
             PageSize = query.PageSize
         };
 
-        PagedResult<JobApplication> pagedJobApplications;
+        // Bu metod tüm verileri (soft delete edilmiş olanlar dahil) getirecek
+        var pagedJobApplications = await _repo.GetAllJobApplicationsPagedAsync(
+            pagination.ValidatedPageNumber,
+            pagination.ValidatedPageSize,
+            query.SearchTerm,
+            query.Status
+        );
 
-        // Search varsa
-        if (!string.IsNullOrEmpty(query.SearchTerm))
-        {
-            pagedJobApplications = await _repo.SearchJobApplicationsPagedAsync(
-                pagination.ValidatedPageNumber,
-                pagination.ValidatedPageSize,
-                query.SearchTerm
-            );
-        }
-        // Role filter varsa
-        else if (query.Status.HasValue)
-        {
-            pagedJobApplications = await _repo.GetJobApplicationsByStatusPagedAsync(
-                pagination.ValidatedPageNumber,
-                pagination.ValidatedPageSize,
-                query.Status.Value
-            );
-        }
-        // Normal pagination
-        else
-        {
-            pagedJobApplications = await _repo.GetPagedAsync(
-                pagination.ValidatedPageNumber,
-                pagination.ValidatedPageSize
-            );
-        }
-
-        // User'ları AdminUserDto'ya dönüştür
+        // JobApplications'ları AdminJobApplicationDto'ya dönüştür
         var adminJobApplicationDtos = pagedJobApplications.Items.Select(u => new AdminJobApplicationDto
         {
             Id = u.Id,

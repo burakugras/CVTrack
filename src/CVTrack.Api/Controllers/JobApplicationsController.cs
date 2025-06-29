@@ -31,7 +31,7 @@ namespace CVTrack.Api.Controllers
             );
 
         // GET: api/jobapplications
-        [HttpGet]
+        [HttpGet("getAll")]
         public async Task<ActionResult<PagedResult<JobApplicationDto>>> GetByUser(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,

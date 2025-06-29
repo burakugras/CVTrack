@@ -10,8 +10,23 @@ public interface IJobApplicationRepository
     Task<JobApplication> AddAsync(JobApplication application);
     Task UpdateAsync(JobApplication application);
     Task RemoveAsync(JobApplication application);
+
+    // tüm verileri getir (soft delete durumu fark etmeksizin)
     Task<IEnumerable<JobApplication>> GetAllAsync();
-    Task<IEnumerable<JobApplication>> GetAllActiveJobApplicationsAsync();
+
+    // sadece aktif verileri getir (IsDeleted = false)
+    Task<PagedResult<JobApplication>> GetAllActiveJobApplicationsAsync(
+        int pageNumber,
+        int pageSize,
+        string? searchTerm = null,
+        ApplicationStatus? status = null);
+
+    // tüm verileri getir - sayfalanmış (soft delete durumu fark etmeksizin)
+    Task<PagedResult<JobApplication>> GetAllJobApplicationsPagedAsync(
+        int pageNumber,
+        int pageSize,
+        string? searchTerm = null,
+        ApplicationStatus? status = null);
 
     // Yeni filtreleme metodları
     Task<PagedResult<JobApplication>> GetJobApplicationsByUserFilteredPagedAsync(

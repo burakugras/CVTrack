@@ -30,7 +30,7 @@ public class CvsAdminController : ControllerBase
     }
 
     // GET api/admin/CvsAdmin
-    [HttpGet]
+    [HttpGet("getAll")]
     public async Task<ActionResult<PagedResult<AdminCvDto>>> GetAll(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,

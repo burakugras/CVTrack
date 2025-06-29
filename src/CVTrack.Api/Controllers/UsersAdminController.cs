@@ -47,7 +47,7 @@ namespace CVTrack.Api.Controllers.Admin
             return NoContent();
         }
 
-        [HttpGet("getall")]
+        [HttpGet("getAll")]
         public async Task<ActionResult<PagedResult<AdminUserDto>>> GetAllUsers(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,

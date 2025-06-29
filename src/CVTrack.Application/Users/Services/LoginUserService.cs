@@ -21,9 +21,7 @@ public class LoginUserService : ILoginUserService
         _tokenService = tokenService;
     }
 
-    /// <summary>
-    /// Başarılı login olursa JWT token döner; başarısızsa null.
-    /// </summary>
+    // Başarılı login olursa JWT token döner; başarısızsa null.
     public async Task<string?> LoginAsync(LoginUserCommand command)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email);
