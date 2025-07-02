@@ -15,8 +15,7 @@ public class AdminJobApplicationService : IAdminJobApplicationService
 {
     private readonly IJobApplicationRepository _repo;
 
-    public AdminJobApplicationService(IJobApplicationRepository repo)
-        => _repo = repo;
+    public AdminJobApplicationService(IJobApplicationRepository repo) => _repo = repo;
 
     // tüm verileri getir (soft delete durumu fark etmeksizin)
     public async Task<IEnumerable<AdminJobApplicationDto>> GetAllAsync(GetAllJobApplicationsQuery _)

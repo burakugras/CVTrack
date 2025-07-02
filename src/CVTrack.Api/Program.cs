@@ -16,6 +16,7 @@ using Microsoft.OpenApi.Models;
 using CVTrack.Api.Swagger;
 using Serilog;
 using CVTrack.Application.Audits.Services;
+using System.Text.Json.Serialization;
 // using CVTrack.Application.Services;// FileUploadOperationFilter için
 
 
@@ -29,6 +30,13 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 builder.Host.UseSerilog();
 
