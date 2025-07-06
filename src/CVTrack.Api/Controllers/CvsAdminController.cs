@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace CVTrack.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/admin/[controller]")]
+[Route("api/admin/cvs")]
 [Authorize(Roles = "Admin")]
 public class CvsAdminController : ControllerBase
 {
@@ -30,7 +30,7 @@ public class CvsAdminController : ControllerBase
     }
 
     // GET api/admin/CvsAdmin
-    [HttpGet("getAll")]
+    [HttpGet]
     public async Task<ActionResult<PagedResult<AdminCvDto>>> GetAll(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,

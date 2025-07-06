@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CVTrack.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth")]
 public class AuthController : ControllerBase
 {
     private readonly ILoginUserService _loginService;

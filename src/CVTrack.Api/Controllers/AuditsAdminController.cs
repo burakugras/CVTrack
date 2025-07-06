@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CVTrack.Api.Controllers;
 
 [ApiController]
-[Route("api/admin/[controller]")]
+[Route("api/admin/audits")]
 [Authorize(Roles = "Admin")]
 public class AuditsAdminController : ControllerBase
 {
@@ -19,7 +19,8 @@ public class AuditsAdminController : ControllerBase
 
     /// GET api/admin/audits?cvId={cvId}&userId={userId}
     [HttpGet("getByUserId")]
-    public async Task<ActionResult<PagedResult<AuditDto>>> GetByUserId([FromQuery] Guid userId,
+    public async Task<ActionResult<PagedResult<AuditDto>>> GetByUserId(
+            [FromQuery] Guid userId,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
@@ -39,8 +40,9 @@ public class AuditsAdminController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("all")]
-    public async Task<ActionResult<PagedResult<AuditDto>>> GetAll([FromQuery] int pageNumber = 1,
+    [HttpGet]
+    public async Task<ActionResult<PagedResult<AuditDto>>> GetAll(
+            [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
             [FromQuery] string? searchTerm = null,
             [FromQuery] AuditAction? action = null)

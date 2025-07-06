@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CVTrack.Api.Controllers.Admin;
 
 [ApiController]
-[Route("api/admin/[controller]")]
+[Route("api/admin/job-applications")]
 [Authorize(Roles = "Admin")]
 public class JobApplicationsAdminController : ControllerBase
 {
@@ -28,7 +28,7 @@ public class JobApplicationsAdminController : ControllerBase
     }
     */
 
-    [HttpGet("getAll")]
+    [HttpGet]
     public async Task<ActionResult<PagedResult<AdminJobApplicationDto>>> GetAll(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,
@@ -52,7 +52,7 @@ public class JobApplicationsAdminController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("getAllActive")]
+    [HttpGet("active")]
     public async Task<ActionResult<PagedResult<AdminJobApplicationDto>>> GetActiveJobApplicationsForAdmin(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,

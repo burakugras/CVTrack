@@ -17,7 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CVTrack.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/cvs")]
 [Authorize]
 public class CvsController : ControllerBase
 {
@@ -32,7 +32,7 @@ public class CvsController : ControllerBase
         _auditService = auditService;
     }
 
-    [HttpGet("getByUser")]
+    [HttpGet]
     public async Task<ActionResult<PagedResult<CVDto>>> GetByUser(
         [FromQuery] int pageNumber = 1,
         [FromQuery] int pageSize = 10,

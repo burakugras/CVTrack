@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CVTrack.Api.Controllers.Admin
 {
     [ApiController]
-    [Route("api/admin/[controller]")]
+    [Route("api/admin/users")]
     [Authorize(Roles = "Admin")]
     public class UsersAdminController : ControllerBase
     {
@@ -47,7 +47,7 @@ namespace CVTrack.Api.Controllers.Admin
             return NoContent();
         }
 
-        [HttpGet("getAll")]
+        [HttpGet]
         public async Task<ActionResult<PagedResult<AdminUserDto>>> GetAllUsers(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,

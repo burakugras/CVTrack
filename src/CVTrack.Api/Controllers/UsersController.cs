@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CVTrack.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/users")]
 public class UsersController : ControllerBase
 {
     private readonly RegisterUserService _registerService;

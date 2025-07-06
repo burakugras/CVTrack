@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace CVTrack.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/job-applications")]
     [Authorize]
     public class JobApplicationsController : ControllerBase
     {
@@ -31,7 +31,7 @@ namespace CVTrack.Api.Controllers
             );
 
         // GET: api/jobapplications
-        [HttpGet("getAll")]
+        [HttpGet]
         public async Task<ActionResult<PagedResult<JobApplicationDto>>> GetByUser(
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10,
