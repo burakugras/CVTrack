@@ -17,6 +17,7 @@ using CVTrack.Api.Swagger;
 using Serilog;
 using CVTrack.Application.Audits.Services;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Builder;
 // using CVTrack.Application.Services;// FileUploadOperationFilter için
 
 
@@ -30,6 +31,17 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy
+          .WithOrigins("http://localhost:5500", "http://127.0.0.1:5500") // Live Server veya http-server portu
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+    });
+});
 
 
 builder.Services.AddControllers()
@@ -161,6 +173,9 @@ app.UseSwaggerUI(c =>
 });
 
 app.UseRouting();
+
+app.UseCors("FrontendPolicy");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
