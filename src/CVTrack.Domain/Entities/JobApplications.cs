@@ -11,6 +11,8 @@ public class JobApplication
     public ApplicationStatus Status { get; set; }
     public string? Notes { get; set; }
 
+    public string? FileName { get; set; }
+
     public bool IsDeleted { get; set; } = false;
 
     // Navigation properties

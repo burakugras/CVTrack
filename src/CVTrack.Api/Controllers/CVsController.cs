@@ -70,8 +70,7 @@ public class CvsController : ControllerBase
                 ?? User.FindFirstValue(JwtRegisteredClaimNames.Sub)!
         );
 
-        var ext = Path.GetExtension(file.FileName);
-        var fileName = $"{Guid.NewGuid()}{ext}";
+        var fileName = file.FileName;
 
         byte[] content;
         using var ms = new MemoryStream();

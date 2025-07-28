@@ -23,6 +23,7 @@ public class JobApplicationService : IJobApplicationService
             Id = Guid.NewGuid(),
             UserId = cmd.UserId,
             CVId = cmd.CVId,
+            FileName = cmd.FileName,
             CompanyName = cmd.CompanyName,
             ApplicationDate = cmd.ApplicationDate,
             Status = cmd.Status,
@@ -41,6 +42,7 @@ public class JobApplicationService : IJobApplicationService
         existing.ApplicationDate = cmd.ApplicationDate;
         existing.Status = cmd.Status;
         existing.Notes = cmd.Notes;
+        existing.FileName = cmd.FileName;
 
         await _jobRepo.UpdateAsync(existing);
     }
@@ -98,6 +100,7 @@ public class JobApplicationService : IJobApplicationService
             Id = u.Id,
             UserId = u.UserId,
             CVId = u.CVId,
+            FileName = u.FileName,
             CompanyName = u.CompanyName,
             ApplicationDate = u.ApplicationDate,
             Status = u.Status,
