@@ -203,13 +203,16 @@ public class JobApplicationRepository : IJobApplicationRepository
         ApplicationStatus? status = null)
     {
         var query = _context.JobApplications
-            .Where(j => !j.IsDeleted); // Soft delete filtresi
+            .Where(j => !j.IsDeleted)
+            .AsQueryable();
 
         // SearchTerm filtresi
         if (!string.IsNullOrEmpty(searchTerm))
         {
             query = query.Where(j =>
-                j.CompanyName.Contains(searchTerm) ||
+                (j.User.FirstName != null && j.User.FirstName.Contains(searchTerm)) ||
+                (j.User.LastName != null && j.User.LastName.Contains(searchTerm)) ||
+                (j.CompanyName != null && j.CompanyName.Contains(searchTerm)) ||
                 (j.Notes != null && j.Notes.Contains(searchTerm)));
         }
 

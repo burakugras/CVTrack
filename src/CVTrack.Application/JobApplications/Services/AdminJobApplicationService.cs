@@ -67,7 +67,7 @@ public class AdminJobApplicationService : IAdminJobApplicationService
         };
 
         // Bu metod sadece aktif (soft delete edilmemiş) verileri getirecek
-        var pagedJobApplications = await _repo.GetAllActiveJobApplicationsAsync(
+        var pagedJobApplications = await _repo.GetJobApplicationsFilteredPagedAsync(
             pagination.ValidatedPageNumber,
             pagination.ValidatedPageSize,
             query.SearchTerm,
