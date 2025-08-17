@@ -37,7 +37,9 @@ public class LoginUserService : ILoginUserService
         var token = _tokenService.CreateToken(
             user.Id,
             user.Email,
-            user.Role);
+            user.Role,
+            user.FirstName,
+            user.LastName);
 
         return token;
     }

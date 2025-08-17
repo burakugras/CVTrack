@@ -13,7 +13,7 @@ public class JwtTokenService : ITokenService
     private readonly IConfiguration _config;
     public JwtTokenService(IConfiguration config) => _config = config;
 
-    public string CreateToken(Guid userId, string email, UserRole userRole)
+    public string CreateToken(Guid userId, string email, UserRole userRole, string firstName, string lastName)
     {
         var jwtSection = _config.GetSection("JwtSettings");
         var keyBytes = Encoding.UTF8.GetBytes(jwtSection["SecretKey"]!);
@@ -25,7 +25,9 @@ public class JwtTokenService : ITokenService
                 new Claim(JwtRegisteredClaimNames.Sub,   userId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, email),
                 new Claim(JwtRegisteredClaimNames.Jti,   Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role,               userRole.ToString())
+                new Claim(ClaimTypes.Role, userRole.ToString()),
+                new Claim("firstName", firstName),
+                new Claim("lastName", lastName)
             };
 
         var token = new JwtSecurityToken(
